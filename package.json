@@ -1,0 +1,25 @@
+{
+  "name": "sourcify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/sourcify.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "bench": "node ./test/bench/benchmark"
+  },
+  "author": "Zachary Miller",
+  "license": "ISC",
+  "dependencies": {
+    "esprima": "^2.7.2"
+  },
+  "devDependencies": {
+    "benchmark": "^2.1.0",
+    "chai": "^3.5.0",
+    "escodegen": "^1.8.0",
+    "esotope": "^1.4.5",
+    "mocha": "^2.4.5"
+  }
+}

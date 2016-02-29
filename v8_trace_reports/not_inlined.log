@@ -1,0 +1,316 @@
+Did not inline call called from isFunction (target not inlineable).
+Did not inline call called from  (target not inlineable).
+Did not inline call called from baseHas (target not inlineable).
+Did not inline statPath called from tryFile (target not inlineable).
+Did not inline realpathSync called from tryFile (target text too big).
+Did not inline readPackage called from tryPackage (target not inlineable).
+Did not inline statPath called from tryFile (target not inlineable).
+Did not inline realpathSync called from tryFile (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipSingleLineComment called from skipComment (target text too big).
+Did not inline skipMultiLineComment called from skipComment (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline scanIdentifier called from advance (target text too big).
+Did not inline scanPunctuator called from advance (target text too big).
+Did not inline scanStringLiteral called from advance (target text too big).
+Did not inline scanPunctuator called from advance (target text too big).
+Did not inline scanNumericLiteral called from advance (target text too big).
+Did not inline scanPunctuator called from advance (target text too big).
+Did not inline skipSingleLineComment called from skipComment (target text too big).
+Did not inline skipMultiLineComment called from skipComment (target text too big).
+Did not inline inheritCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseConditionalExpression called from parseAssignmentExpression (target text too big).
+Did not inline reinterpretExpressionAsPattern called from parseAssignmentExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseAssignmentExpression (target text too big).
+Did not inline getIdentifier called from scanIdentifier (target text too big).
+Did not inline isKeyword called from scanIdentifier (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parsePrimaryExpression (target text too big).
+Did not inline inheritCoverGrammar called from parsePrimaryExpression (target text too big).
+Did not inline inheritCoverGrammar called from parsePrimaryExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseFunctionExpression called from parsePrimaryExpression (target text too big).
+Did not inline matchKeyword called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline lex called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline Node.finishThisExpression called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline lex called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline Node.finishLiteral called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline lex called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline Node.finishLiteral called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline match called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline scanRegExp called from parsePrimaryExpression (target text too big).
+Did not inline lex called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline Node.finishLiteral called from parsePrimaryExpression (cumulative AST node limit reached).
+Did not inline inheritCoverGrammar called from parsePostfixExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline push called from parsePattern (target not inlineable).
+Did not inline parseVariableIdentifier called from parsePattern (target text too big).
+Did not inline parsePostfixExpression called from parseUnaryExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parseUnaryExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parseUnaryExpression (target text too big).
+Did not inline matchKeyword called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline matchKeyword called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline matchKeyword called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline lex called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline inheritCoverGrammar called from parseUnaryExpression (target text too big).
+Did not inline WrappingNode called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline Node.finishUnaryExpression called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline parsePostfixExpression called from parseUnaryExpression (target text too big).
+Did not inline parseConditionalExpression called from parseAssignmentExpression (target text too big).
+Did not inline reinterpretExpressionAsPattern called from parseAssignmentExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseAssignmentExpression (target text too big).
+Did not inline inheritCoverGrammar called from parseLeftHandSideExpressionAllowCall (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline match called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline parseArguments called from parseLeftHandSideExpressionAllowCall (target text too big).
+Did not inline WrappingNode called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline Node.finishCallExpression called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline match called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline parseComputedMember called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline WrappingNode called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline Node.finishMemberExpression called from parseLeftHandSideExpressionAllowCall (cumulative AST node limit reached).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseStatementListItem called from parseStatementList (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parsePostfixExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parsePostfixExpression called from parseUnaryExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parseUnaryExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline inheritCoverGrammar called from parseUnaryExpression (target text too big).
+Did not inline matchKeyword called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline matchKeyword called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline matchKeyword called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline lex called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline inheritCoverGrammar called from parseUnaryExpression (target text too big).
+Did not inline WrappingNode called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline Node.finishUnaryExpression called from parseUnaryExpression (cumulative AST node limit reached).
+Did not inline parsePostfixExpression called from parseUnaryExpression (target text too big).
+Did not inline push called from parsePattern (target not inlineable).
+Did not inline parseVariableIdentifier called from parsePattern (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseVariableDeclaration (target text too big).
+Did not inline skipSingleLineComment called from skipComment (target text too big).
+Did not inline skipMultiLineComment called from skipComment (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseStatementListItem called from parseStatementList (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseExpression (target text too big).
+Did not inline consumeSemicolon called from parseExpressionStatement (cumulative AST node limit reached).
+Did not inline parseBreakStatement called from parseStatement (target text too big).
+Did not inline parseContinueStatement called from parseStatement (target text too big).
+Did not inline parseForStatement called from parseStatement (target text too big).
+Did not inline parseIfStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseReturnStatement called from parseStatement (target text too big).
+Did not inline parseThrowStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseTryStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseVariableStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseWhileStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseExpression called from parseStatement (cumulative AST node limit reached).
+Did not inline consumeSemicolon called from parseStatement (cumulative AST node limit reached).
+Did not inline Node.finishExpressionStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseStatement called from parseIfStatement (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseStatement called from parseIfStatement (target text too big).
+Did not inline Node.finishIfStatement called from parseIfStatement (cumulative AST node limit reached).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseComputedMember (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseFunctionDeclaration called from parseStatementListItem (target text too big).
+Did not inline parseStatement called from parseStatementListItem (target text too big).
+Did not inline inheritCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline push called from parsePattern (target not inlineable).
+Did not inline parseVariableIdentifier called from parsePattern (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseConditionalExpression called from parseAssignmentExpression (target text too big).
+Did not inline reinterpretExpressionAsPattern called from parseAssignmentExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseAssignmentExpression (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline parseStatementListItem called from parseStatementList (target text too big).
+Did not inline skipComment called from lex (target text too big).
+Did not inline advance called from lex (target text too big).
+Did not inline isolateCoverGrammar called from parseExpression (target text too big).
+Did not inline consumeSemicolon called from parseExpressionStatement (cumulative AST node limit reached).
+Did not inline parseBreakStatement called from parseStatement (target text too big).
+Did not inline parseContinueStatement called from parseStatement (target text too big).
+Did not inline parseForStatement called from parseStatement (target text too big).
+Did not inline parseIfStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseReturnStatement called from parseStatement (target text too big).
+Did not inline parseThrowStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseTryStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseVariableStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseWhileStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline parseExpression called from parseStatement (cumulative AST node limit reached).
+Did not inline consumeSemicolon called from parseStatement (cumulative AST node limit reached).
+Did not inline Node.finishExpressionStatement called from parseStatement (cumulative AST node limit reached).
+Did not inline inheritCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline isolateCoverGrammar called from parseConditionalExpression (target text too big).
+Did not inline isolateCoverGrammar called from parseExpression (target text too big).
+Did not inline parseConditionalExpression called from parseAssignmentExpression (target text too big).
+Did not inline reinterpretExpressionAsPattern called from parseAssignmentExpression (target text too big).
+Did not inline isolateCoverGrammar called from parseAssignmentExpression (target text too big).
+Did not inline call called from validateParam (target not inlineable).
+Did not inline writeArray called from nodes.BlockStatement (target text too big).
+Did not inline write called from nodes.VariableDeclarator (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.VariableDeclarator (cumulative AST node limit reached).
+Did not inline resetAllowIn called from maybeResetAllowIn (cumulative AST node limit reached).
+Did not inline maybeResetNewNeedsParens called from afterWriteNode (cumulative AST node limit reached).
+Did not inline maybeResetAllowCall called from afterWriteNode (cumulative AST node limit reached).
+Did not inline load called from afterWriteNode (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.AssignmentExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.AssignmentExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.AssignmentExpression (cumulative AST node limit reached).
+Did not inline parens called from nodes.AssignmentExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.AssignmentExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.AssignmentExpression (cumulative AST node limit reached).
+Did not inline resetAllowIn called from maybeResetAllowIn (cumulative AST node limit reached).
+Did not inline maybeResetNewNeedsParens called from afterWriteNode (cumulative AST node limit reached).
+Did not inline maybeResetAllowCall called from afterWriteNode (cumulative AST node limit reached).
+Did not inline load called from afterWriteNode (cumulative AST node limit reached).
+Did not inline write called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline parens called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.BinaryExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.ReturnStatement (cumulative AST node limit reached).
+Did not inline resetNewNeedsParens called from maybeResetNewNeedsParens (cumulative AST node limit reached).
+Did not inline maybeResetAllowCall called from afterWriteNode (cumulative AST node limit reached).
+Did not inline load called from afterWriteNode (cumulative AST node limit reached).
+Did not inline startPrecedenceCtx called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline writeArray called from nodes.CallExpression (target text too big).
+Did not inline Object.defineProperty.get called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline callAllowed called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.CallExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.FunctionExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.FunctionExpression (cumulative AST node limit reached).
+Did not inline writeArray called from nodes.FunctionExpression (target text too big).
+Did not inline write called from nodes.FunctionExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.FunctionExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.FunctionExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.FunctionExpression (cumulative AST node limit reached).
+Did not inline resetAllowIn called from maybeResetAllowIn (cumulative AST node limit reached).
+Did not inline maybeResetNewNeedsParens called from afterWriteNode (cumulative AST node limit reached).
+Did not inline maybeResetAllowCall called from afterWriteNode (cumulative AST node limit reached).
+Did not inline load called from afterWriteNode (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.UnaryExpression (cumulative AST node limit reached).
+Did not inline parens called from nodes.UnaryExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.UnaryExpression (cumulative AST node limit reached).
+Did not inline resetAllowIn called from maybeResetAllowIn (cumulative AST node limit reached).
+Did not inline maybeResetNewNeedsParens called from afterWriteNode (cumulative AST node limit reached).
+Did not inline maybeResetAllowCall called from afterWriteNode (cumulative AST node limit reached).
+Did not inline load called from afterWriteNode (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.LogicalExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.LogicalExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.LogicalExpression (cumulative AST node limit reached).
+Did not inline parens called from nodes.LogicalExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.LogicalExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.LogicalExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline write called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline write called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline write called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline write called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline write called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.IfStatement (cumulative AST node limit reached).
+Did not inline resetAllowCall called from maybeResetAllowCall (cumulative AST node limit reached).
+Did not inline load called from afterWriteNode (cumulative AST node limit reached).
+Did not inline write called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline allowIn called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline resetAllowIn called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline endPrecedenceCtx called from nodes.ConditionalExpression (cumulative AST node limit reached).
+Did not inline write called from nodes.Property (cumulative AST node limit reached).
+Did not inline Object.defineProperty.get called from nodes.Property (cumulative AST node limit reached).

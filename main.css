@@ -1,0 +1,356 @@
+html, body {
+	background-color: #fafafa;
+	height: 100%;
+	margin: 0;
+  padding: 0;
+}
+
+.inline-code {
+	background-color: #e8e8e8;
+	border-radius: 4px;
+	font-family:monospace;
+	padding: 1px 2px;
+}
+
+blockquote {
+	background-color: #f0f8ff;
+	border-left: 4px solid #48c;
+	font-family:monospace;
+	height: 40px;
+	line-height: 40px;
+	margin-left: 0;
+	padding-left: 10px;
+}
+
+dd {
+	margin-bottom: 25px;
+	margin-left: 0;
+}
+
+/* Header */
+
+.header-container {
+	background-color: #048;
+	border-bottom: 5px solid #024;
+	width: 100%;
+}
+
+.header {
+	color: #fff;
+	font: 700 28px/40px Bitter, Avenir;
+	height: 45px;
+	margin: auto;
+	position: relative;
+	width: 1002px;
+	-webkit-font-smoothing: antialiased;
+}
+
+a.header-name, a.header-name:hover, a.header-name:focus, a.header-name:visited {
+	color: #fff;
+	font: 700 32px/40px Bitter, Avenir;
+	text-decoration: none;
+}
+
+.header-nav-container {
+	color: #fff;
+	font-size: 18px;
+	line-height: 45px;
+	height: 45px;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.header-nav {
+	color: #fff;
+	text-decoration: none;
+	height: 45px;
+	float: right;
+	margin-right: 20px;
+	padding: 0 20px;
+}
+
+.header-nav-active {
+	background-color: #024;
+}
+
+.header-nav:hover {
+	background-color: #024;
+	cursor: pointer;
+}
+
+@media (max-width: 1150px) {
+	.header {
+		width: 700px;
+	}
+}
+
+/* Slides */
+
+.page-container {
+	background-color: #fafafa;
+	box-sizing: border-box;
+	height: 100%;
+	position: relative;
+	margin: 10px auto 0;
+	width: 1032px;
+	box-sizing: border-box;
+}
+
+.text-content {
+	color: #1c2022;
+	font: normal normal 16px/1.5 Helvetica, sans-serif;
+	margin: 20px auto 45px;
+	text-align: justify;
+	width: 900px;
+}
+
+.text-content a {
+	color: #05a;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.text-content a:focus, .text-content a:hover {
+	color: #05a;
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+@media (max-width: 1150px) {
+	.page-container {
+		width: 700px;
+	}
+
+	.text-content {
+		width: 700px;
+	}
+}
+
+/* Slide #1 */
+
+.small-window-msg {
+	display: none;
+}
+
+.demo-input {
+	margin-bottom: 50px;
+}
+
+.demo-output {
+	float: right;
+	position: relative;
+	width: 500px;
+}
+
+.demo-output .CodeMirror{
+	background-color: #eee;
+}
+
+.demo-output-nav {
+	font: 400 16px/22px 'Helvetica Neue', sans-serif;
+	height: 25px;
+	position:absolute;
+	top: -30px;
+}
+
+.demo-input {
+	border: 1px solid #ccc;
+	float: left;
+	margin: 0;
+	position: relative;
+	width: 500px;
+}
+
+.demo-input-nav {
+	box-sizing: border-box;
+	font: 400 16px/22px 'Helvetica Neue', sans-serif;
+	height: 25px;
+	position:absolute;
+	top: -30px;
+}
+
+.demo-nav {
+	border-radius: 4px;
+	color: #05a;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 10px;
+	padding: 1px 5px;
+}
+
+.demo-nav:hover, .demo-nav-active {
+	background-color: #05a;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.demo-input-error {
+	color: #faa;
+	font: 400 15px/28px 'Helvetica Neue', sans-serif;
+	height: 28px;
+	position: absolute;
+	bottom: -28px;
+}
+
+.demo-options-container {
+	margin-top: 50px;
+}
+
+.demo-option {
+	background-color: #f8f8f8;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+	display: inline-block;
+	height: 20px;
+  color: #333;
+  font: 14px/20px Tahoma;
+	margin-bottom: 5px;
+	margin-right: 5px;
+  padding: 5px 30px 5px 10px;
+	position: relative;
+  text-align: center;
+}
+
+.demo-option[selected="selected"] {
+	background-color: #ddd;
+}
+
+.demo-option-checkbox {
+	background-color: #fff;
+	border: 1px solid #bbb;
+	color: #05a;
+	cursor: pointer;
+	display: inline-block;
+	height: 15px;
+	line-height: 15px;
+	font-size: 15px;
+	position: absolute;
+	right: 7px;
+	top: 7px;
+	width: 15px;
+
+	-webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+@media (max-width: 1150px) {
+	.small-window-msg {
+		color: #999;
+		display: inline;
+	}
+
+	.demo-container {
+		margin: 0 auto;
+		width: 500px;
+	}
+
+	.demo-input {
+		margin-bottom: 70px;
+	}
+
+	.demo-output {
+		margin-bottom: 20px;
+	}
+
+	.demo-options-container {
+		margin: 0 auto;
+		width: 500px;
+	}
+}
+
+/* Slide #2 */
+
+.compare-container {
+	margin: 50px auto;
+	width: 1012px;
+}
+
+.compare-sourcify {
+	float: right;
+	position: relative;
+	width: 370px;
+}
+
+.compare-escodegen {
+	float: left;
+	position: relative;
+	width: 580px;
+}
+
+.compare-sourcify .CodeMirror, .compare-escodegen .CodeMirror{
+	background-color: #eee;
+	height: auto;
+}
+
+.compare-title {
+	font: 400 16px/22px 'Helvetica Neue', sans-serif;
+	height: 25px;
+	position:absolute;
+	left: 0;
+	right: 0;
+	top: -30px;
+}
+
+@media (max-width: 1150px) {
+	.compare-container {
+		width: 580px;
+	}
+	.compare-sourcify {
+		margin-bottom: 20px
+	}
+}
+
+/* Slide #3 */
+
+.api-dl {
+	padding: 0 50px
+}
+
+.api-dt {
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 5px;
+	padding-bottom: 2px;
+}
+
+.api-option-name {
+	font: 700 16px monospace;
+}
+
+/* Slide #4 */
+
+.download-btn {
+	border: 2px solid #048;
+	border-radius: 5px;
+	color: #048;
+	cursor: pointer;
+	display: inline-block;
+	font-size: 16px;
+	margin: 20px;
+	margin-left: 0px;
+	padding: 10px;
+}
+
+.download-btn:hover {
+	background-color: #048;
+	color: #fff;
+}
+
+/* Plugin related */
+
+/* Google's prettifier */
+pre.prettyprint.pre-code-box {
+	background-color: #eee;
+	border-radius: 0;
+	border-color: #bbb;
+	border-style: solid;
+	border-width: 1px;
+	padding: 15px;
+}

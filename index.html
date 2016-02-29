@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sourcify</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script src="vendor/jquery/jquery.js" charset="utf-8"></script>
+  <script src="vendor/esprima/esprima.js" type="text/javascript" charset="utf-8"></script>
+
+  <script src="vendor/source-map/source-map.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="src/sourcify.js" type="text/javascript" charset="utf-8"></script>
+
+	<link rel="stylesheet" href="main.css" type="text/css" media="screen">
+	<script src="main.js" type="text/javascript" charset="utf-8"></script>
+
+  <!-- font for header -->
+  <link href="https://fonts.googleapis.com/css?family=Bitter:400,700" rel="stylesheet" type="text/css">
+
+  <!-- CodeMirror for demo -->
+  <script src="vendor/codemirror/codemirror.js"></script>
+  <link rel="stylesheet" href="vendor/codemirror/codemirror.css">
+  <script src="vendor/codemirror/javascript.js"></script>
+
+  <!-- fullPage.js for slide structure -->
+  <link rel="stylesheet" type="text/css" href="vendor/fullpage/jquery.fullPage.css" />
+  <script src="vendor/fullpage/jquery.slimscroll.js" charset="utf-8"></script>
+  <script type="text/javascript" src="vendor/fullpage/jquery.fullPage.js"></script>
+
+</head>
+<body>
+<div class="header-container">
+  <div class="header">
+    <a class="header-name" href="index.html">sourcify.js</a>
+    <div class="header-nav-container">
+      <a href="#slide/source">
+        <div class="header-nav" data-slideIndex="3">
+          source
+        </div>
+      </a>
+      <a href="#slide/api">
+      <div class="header-nav" data-slideIndex="2">
+        api
+      </div>
+      </a>
+      <a href="#slide/compare">
+      <div class="header-nav" data-slideIndex="1">
+        compare
+      </div>
+      </a>
+      <a href="#slide/demo">
+      <div class="header-nav header-nav-active" data-slideIndex="0">
+        demo
+      </div>
+      </a>
+    </div>
+  </div>
+</div>
+<div id="fullpage">
+  <div class="section">
+    <div class="slide" data-anchor="demo">
+      <div class="page-container">
+        <div class="text-content">
+          Sourcify is a code generator that cleans up and applies a consistent formatting style to JavaScript source code. In addition to pretty-printing, Sourcify can be used as the code generator component of a compiler/transpiler (though source map support is still under development). You can pass Sourcify any ES5 <a href="https://github.com/estree/estree">ESTree</a>-compliant syntax tree, such as a tree created by <a href="https://github.com/jquery/esprima"> Esprima</a>, <a href="https://github.com/ternjs/acorn">Acorn</a>, or <a href="https://github.com/eslint/espree">Espree</a>. You can also pass Sourcify a string, in which case it will parse the string with Esprima and pass that tree to its code generation process. Sourcify takes 38 <a href="http://jscs.info/">JSCS</a>-inspired options to give you precise control over semicolons, spacing, linebreaks, indentation, and more. Try out the demos. Experiment with the checkboxes below to sample Sourcify's formatting flexibility. Edit the code snippet to see Sourcify transform it live. <span class="small-window-msg">It is easier to compare changes if you expand your browser window so the code sits side-by-side.</span>
+        </div>
+
+        <div class="demo-container">
+          <div class="demo-input">
+            <div class="demo-input-nav">
+              <a class="demo-nav demo-nav-active" data-demo="1">demo 1</a>
+              <a class="demo-nav" data-demo="2">demo 2</a>
+            </div>
+            <div class="demo-input-error"></div>
+          </div>
+
+          <div class="demo-output">
+            <div class="demo-output-nav">
+              Sourcify output
+            </div>
+          </div>
+
+        </div>
+
+        <div style="clear: both; margin: 20px 0 15px"></div>
+
+        <div class="demo-options-container"></div>
+
+        <div style="height: 150px"></div>
+      </div>
+    </div>
+    <div class="slide" data-anchor="compare">
+      <div class="page-container">
+        <div class="text-content">
+          Sourcify's main strength is its readable source code. This makes it easy to customize and extend. Compare the following two functions, one from <a href="https://github.com/estools/escodegen">Escodegen</a>, currently the most popular JavaScript code generator, and one from Sourcify. These functions do the same thing. They generate update expressions such as <span style="font-family: monospace">i++</span>. But the Sourcify logic is transparent. You just go through, step-by-step, checking conditions and writing to a string. It is true that Sourcify's syntactic sugar comes at a slight performance cost. If speed is all you're after, I have also developed a performant version of Sourcify that is 2.5x the speed of Escodegen, as measured using <a href="https://benchmarkjs.com/">Benchmark</a> in a V8 environment. And even the source of this performant version is fairly easy to understand, customize, and extend.
+        </div>
+        <div class="compare-container">
+          <div class="compare-sourcify">
+            <div class="compare-title">
+              Sourcify
+            </div>
+          </div>
+          <div class="compare-escodegen">
+            <div class="compare-title">
+              Escodegen
+            </div>
+          </div>
+        </div>
+        <div style="clear: both; height: 150px; margin: 20px 0 15px"></div>
+      </div>
+
+    </div>
+    <div class="slide" data-anchor="api">
+      <div class="page-container">
+        <div class="text-content">
+          Sourcify's API consists of just one function, which is added to the global namespace.
+          <div style="height: 10px"></div>
+          <span style="font-family:monospace"><strong>sourcify</strong><span class="inline-code">(input[, options])</span></span>
+          <div style="height: 10px"></div>
+          The <span class="inline-code">input</span> parameter can be either an object (the syntax tree to be turned into a string) or a string. If <span class="inline-code">input</span> is a string, Esprima will be used to parse it, and the resulting syntax tree will be passed to the code generation process. The return value will be the generated string.
+          <div style="height: 10px"></div>
+          The <span class="inline-code">options</span> parameter is an object that can contain any of the following properties:
+          <dl class="api-dl">
+            <dt class="api-dt">
+              <span class="api-option-name">semicolons</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then all statements will end with a semicolon. If this is <span class="inline-code">false</span>, then no statement will end with a semicolon. If this is <span class="inline-code">false</span>, then in order to avoid unintended behavior, defensive semicolons will be inserted at the beginning of expression statements.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">preserveComments</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then the original comments will be preserved and included in the generated string. If this is <span class="inline-code">true</span> <em>and</em> you are passing <span class="inline-code">sourcify</span> a syntax tree, make sure the nodes of the syntax tree contain Esprima-style comment data. Currently, this option only works with comments that start in between statements. Any comment that occurs in the middle of a statement will not be preserved. Full comment support is under development.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">preserveLinebreaksBetweenStatements</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, linebreaks between statements will be preserved as they are in the original. If this is <span class="inline-code">true</span> and you are passing <span class="inline-code">sourcify</span> a syntax tree, make sure the nodes of the syntax tree contain location data. Comments in between statements will "sink down" to rest on top of the bottom statement.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">initialIndent</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">false</span>, then there will be no initial indent. If this is <span class="inline-code">true</span>, the initial indent will be one space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">indentIncrement</span> :
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">2</style>
+              </span>
+            </dt>
+            <dd>
+              If this is a <span class="inline-code">number</span>, then that many spaces will be used as the indent increment. If this is a <span class="inline-code">string</span>, then that string will be used as the indent increment.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">multilineArr</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then array literals will appear on multiple lines, with each element beginning on its own line.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">multilineObj</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then object literals will appear on multiple lines, with each key-value pair beginning on its own line.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">multilineVar</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then a variable declaration that declares multiple variables will have each variable on its own line.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">commaFirstArr</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then array literals will be formatted according to comma-first style.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">commaFirstObj</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then object literals will be formatted according to comma-first style.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">commaFirstVar</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then variable declarations involving multiple variables will be formatted according to comma-first style.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterArrComma</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space after the comma that separates elements in an array literal. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterBinOp</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space after a binary operator and before the right operand. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterKeyword</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be
+              one space after any of the following keywords:
+              <span class="inline-code">catch</span>,
+              <span class="inline-code">do</span>,
+              <span class="inline-code">else</span>,
+              <span class="inline-code">finally</span>,
+              <span class="inline-code">for</span>,
+              <span class="inline-code">if</span>,
+              <span class="inline-code">switch</span>,
+              <span class="inline-code">try</span>,
+              <span class="inline-code">while</span>, and
+              <span class="inline-code">with</span>.
+              If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterObjComma</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space after the comma the occurs after a key-value pair in an object literal. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterObjKey</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space after the key and before the semicolon in an object literal. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterPrefixUnOp</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space after a prefix unary operator and before the operand. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+           </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceAfterVarComma</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space after the comma separates variable declarations. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+           </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforeBinOp</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space before the binary operator and after the left operand. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+           </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforeBlock</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space before the block in control flow and looping constructs. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforeFuncBlock</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space before the block in functions. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforeFuncParams</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space before the <span class="inline-code">(</span> that contains the list of function parameters. If this is <span class="inline-code">false</span>, then there will be no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforeKeyword</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be one space before any of the following keywords: <span class="inline-code">catch</span>,
+              <span class="inline-code">do</span>,
+              <span class="inline-code">else</span>,
+              <span class="inline-code">finally</span>,
+              <span class="inline-code">for</span>,
+              <span class="inline-code">if</span>,
+              <span class="inline-code">switch</span>,
+              <span class="inline-code">try</span>,
+              <span class="inline-code">while</span>, and
+              <span class="inline-code">with</span>.
+              If this is <span class="inline-code">false</span>, then there will be
+              no space. If this is a <span class="inline-code">number</span>, then that many spaces will be used. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforeObjValue</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then a single space will be inserted after the <span class="inline-code">:</span> and before the property value in an object literal. If this is a <span class="inline-code">number</span>, then that many spaces will be inserted after the <span class="inline-code">:</span> and before the property value in an object literal. If this is a <span class="inline-code">string</span>, then that string will be inserted after the <span class="inline-code">:</span> and before the property value in an object literal.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBeforePostfixUnOp</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then there will be a space between the operand and post-fix unary operators. If this is a <span class="inline-code">number</span>, then there will be that many spaces between the operand and post-fix unary operators. If this is a <span class="inline-code">string</span>, then that string will be inserted between the operand and post-fix unary operators.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBetweenCallArgs</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in call expressions, there will be a space after the comma that separates arguments. If this is a <span class="inline-code">number</span>, then there will be that many spaces after the comma that separates arguments. If this is a <span class="inline-code">string</span>, then that string will be inserted after the comma that separates arguments.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceBetweenFuncParams</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in function declarations and expressions, there will be a space after the comma that separates parameters. If this is a <span class="inline-code">number</span>, then there will be that many spaces after the comma that separates parameters. If this is a <span class="inline-code">string</span>, then that string will be inserted after the comma that separates parameters.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInCallExpr</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in call expressions, there will be a space after the callee and before the opening paren. If this is a <span class="inline-code">number</span>, then there will be that many spaces after the callee and before the opening paren. If this is a <span class="inline-code">string</span>, then that string will be inserted after the callee and before the opening paren.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInConditionalExpr</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in conditional expressions, there will be a space before and after both the <span class="inline-code">?</span> and the <span class="inline-code">:</span>. If this is a <span class="inline-code">number</span>, then there will be that many spaces before and after both the <span class="inline-code">?</span> and the <span class="inline-code">:</span>. If this is a <span class="inline-code">string</span>, then that string will be used.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInForStatement</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in traditional for loops, there will be a space after the two required semicolons. If this is a <span class="inline-code">number</span>, then there will be that many spaces after the required semicolons. If this is a <span class="inline-code">string</span>, then that string will be inserted after the required semicolons.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInGenerator</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in generator functions, there will be a space before and after the <span class="inline-code">*</span>. If this is a <span class="inline-code">number</span>, then that many spaces will appear before and after the <span class="inline-code">*</span>. If this is a <span class="inline-code">string</span>, then that string will be inserted both before and after the <span class="inline-code">*</span>.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInsideArrBrackets</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in array literals, there will be a space after the opening square bracket and before the closing square bracket. If this is a <span class="inline-code">number</span>, then that many spaces after the opening square bracket and that many spaces before the closing square bracket. If this is a <span class="inline-code">string</span>, then that string will be inserted after the opening square bracket and that string will be inserted before the closing square bracket.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInsideObjBrackets</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in object literals, there will be a space after the opening curly brace and before the closing curly brace. If this is a <span class="inline-code">number</span>, then that many spaces after the opening curly brace and that many spaces before the closing curly brace. If this is a <span class="inline-code">string</span>, then that string will be inserted after the opening curly brace and that string will be inserted before the closing curly brace.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInsideParensForCallArgs</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in call expressions, there will be a space between each paren and the list of arguments. If this is a <span class="inline-code">number</span>, then that many spaces between each paren and the list of arguments. If this is a <span class="inline-code">string</span>, then that string will be inserted between each paren and the list of arguments
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInsideParensForFuncParams</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then, in function declarations and expressions, there will be a space between each paren and the list of parameters. If this is a <span class="inline-code">number</span>, then that many spaces between each paren and the list of parameters. If this is a <span class="inline-code">string</span>, then that string will be inserted  between each paren and the list of parameters.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">spaceInsideParensForParenExpr</span> :
+              <span class="inline-code">boolean</span> |
+              <span class="inline-code">number</span> |
+              <span class="inline-code">string</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">true</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then an expression wrapped in parens will contain a space between each paren and the expression. If this is a <span class="inline-code">number</span>, then that many spaces will be inserted between each paren and the expression. If this is a <span class="inline-code">string</span>, then that string will be inserted between each paren and the expression.
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">trailingCommaArr</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, array literals will contain a trailing comma (i.e., a comma after the last element).
+            </dd>
+            <dt class="api-dt">
+              <span class="api-option-name">trailingCommaObj</span> :
+              <span class="inline-code">boolean</span>
+              <span style="float: right;">
+                default value&nbsp;&nbsp;<span class="inline-code">false</style>
+              </span>
+            </dt>
+            <dd>
+              If this is <span class="inline-code">true</span>, then object literals will contain a trailing comma (i.e., comma after the last key-value pair).
+            </dd>
+          </dl>
+        </div>
+        <div style="height: 150px"></div>
+      </div>
+    </div>
+    <div class="slide" data-anchor="source">
+      <div class="page-container">
+        <div class="text-content">
+          To use Sourcify in the browser, just download sourcify.js and include
+          it in your html. If you are going to pass Sourcify strings, make sure to include
+          the Esprima before Sourcify. If you prefer performance over an easy-to-read source code, try using
+          sourcify-perf.js instead. Both of these versions rely solely on ES5 features and will work in all
+          modern browsers.
+          <br>
+          <div class="download-btn">Download sourcify.js</div>
+          <div class="download-btn">Download sourcify-perf.js</div>
+          <br>
+          You can also use Sourcify in node:
+          <blockquote>npm install sourcify</blockquote>
+          And you can check out the <a href="github.com/zjmiller">source on Github</a>.
+        </div>
+      </div>
+      <div style="height: 150px"></div>
+    </div>
+  </div>
+</div>
+<script type="text/template" id="compare-sourcify-source">function UpdateExpression(){
+  if (is.prefix)
+    startPrecedenceCtx('update-prefix');
+  else startPrecedenceCtx('update-postfix');
+  if (need.parens) write('(');
+  if (is.prefix) write.operator;
+  write.argument;
+  if (is.not.prefix) write.operator;
+  if (need.parens) write(')');
+  endPrecedenceCtx();
+}</script>
+<script type="text/template" id="compare-escodegen-source">function UpdateExpression(expr, precedence, flags){
+  if (expr.prefix) {
+    return parenthesize(
+      [
+        expr.operator,
+        this.generateExpression(expr.argument, Precedence.Unary, E_TTT)
+      ],
+      Precedence.Unary,
+      precedence
+    );
+  }
+  return parenthesize(
+    [
+      this.generateExpression(expr.argument, Precedence.Postfix, E_TTT),
+      expr.operator
+    ],
+    Precedence.Postfix,
+    precedence
+    );
+  }
+}</script>
+</body>
+</html>
