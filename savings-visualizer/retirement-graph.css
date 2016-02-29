@@ -1,0 +1,127 @@
+* {
+	margin: 0;
+}
+
+.chart-container {
+	margin: auto;
+	position: relative;
+}
+
+.chart-legend {
+	fill: #fff;
+	opacity: 0.2;
+	stroke: #aaa;
+	stroke-width: 0.2;
+}
+
+.legend-text {
+	color: #444;
+	font-family: Avenir, sans-serif;
+	font-size: 12px;
+}
+
+.chart-information {
+	left: 0;
+	position: absolute;
+	right: 0;
+	text-align: center;
+	top: 40px;
+}
+
+.specific-bar-information {
+	display: none;
+}
+
+.glyphicon {
+	cursor: pointer;
+}
+
+.info {
+	font-family: Avenir;
+	margin-right: 20px;
+}
+
+.info:last-of-type {
+	margin-right: 0;
+}
+
+.info-total-wealth {
+	color: #369;
+}
+
+.info-yearly-transfer {
+	color: #933;
+}
+
+.info-edit {
+	color: #999;
+	font-size: 12px;
+}
+
+.chart-main {
+}
+
+.bar {
+	cursor: pointer;
+	opacity: 0.6;
+	stroke-width: 0.5;
+}
+
+.bar:hover {
+	opacity: 0.9 !important;
+}
+
+.bar-wealth {
+	fill: steelBlue;
+	stroke: #147;
+}
+
+.bar-transfer {
+	fill: crimson;
+	stroke: #622;
+}
+
+.axis-y path {
+	fill: none;
+}
+
+.axis-y line {
+	stroke: #fff;
+	stroke-dasharray: 2 1;
+	stroke-width: 0.5;
+}
+
+.axis-y text {
+	fill: #666;
+	font-family: Avenir, sans-serif;
+	font-size: 12px;
+}
+
+.axis-x path {
+	fill: none;
+}
+
+.axis-x text {
+	fill: #666;
+	font-family: Avenir, sans-serif;
+	font-size: 12px;
+}
+
+.settings-label {
+	font-family: "Avenir";
+	margin-bottom: -4px;
+	margin-top: 12px;
+}
+
+.form-control {
+	border-radius: 0;
+}
+
+.form-control:focus {
+	background-color: #ffe;
+	box-shadow: none;
+}
+
+a {
+	cursor: pointer
+}
