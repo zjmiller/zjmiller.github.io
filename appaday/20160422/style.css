@@ -1,0 +1,27 @@
+.app-container {
+  margin: 20px auto;
+  width: 600px;
+}
+
+h2 {
+  border-bottom: 1px dotted #666;
+  font: 700 25px Avenir;
+  text-align: center;
+  width: 600px;
+}
+
+path {
+  cursor: pointer;
+}
+
+span {
+  height: 30px;
+  line-height: 30px;
+}
+
+.quiz-container {
+  font: 18px Helvetica;
+  margin-bottom: 15px;
+  text-align: center;
+  width: 600px;
+}
