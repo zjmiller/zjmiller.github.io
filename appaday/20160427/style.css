@@ -1,0 +1,84 @@
+* {
+  margin: 0
+}
+
+.activity-btns-container, .today-breakdown {
+  box-sizing: border-box;
+  margin: 30px auto;
+  width: 900px
+}
+
+@media (max-width: 1000px) {
+  .activity-btns-container, .today-breakdown {
+    padding-left: 50px;
+  }
+}
+
+.activity-btn {
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font: 16px Avenir;
+  height: 40px;
+  line-height: 40px;
+  margin: 5px;
+  position: relative;
+  text-shadow: 0 0 1px #666;
+}
+
+.activity-btn:hover {
+  opacity: 0.9;
+}
+
+.activity-btn-time-label {
+  background-color: transparent;
+  box-sizing: border-box;
+  color: black;
+  font: 10px Avenir;
+  height: 20px;
+  line-height: 20px;
+  position: absolute;
+  text-align: center;
+  text-shadow: none;
+  top: 40px;
+  left: 0;
+  line-height: normal;
+  width: 100%;
+}
+
+.today-breakdown-heading {
+  font-family: Avenir;
+  text-align: center;
+}
+
+.today-breakdown-chart {
+  margin-top: 20px;
+}
+
+.axis line {
+  fill: none;
+  stroke: #ddd;
+  stroke-dasharray: 1 1;
+  stroke-width: 1;
+}
+
+.axis path {
+  fill: none;
+}
+
+.axis text {
+  fill: #bbb;
+  font: 100 12px Avenir;
+}
+
+.calendar-inner-container {
+  margin: 20px auto;
+}
+
+.day {
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+}
