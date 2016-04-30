@@ -1,0 +1,148 @@
+* {
+  margin: 0
+}
+
+.activity-btns-container, .today-breakdown {
+  box-sizing: border-box;
+  margin: 30px auto;
+  width: 900px
+}
+
+@media (max-width: 1000px) {
+  .activity-btns-container, .today-breakdown {
+    padding-left: 20px;
+  }
+}
+
+.activity-btn {
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font: 16px Avenir;
+  height: 40px;
+  line-height: 40px;
+  margin: 5px;
+  position: relative;
+  text-shadow: 0 0 1px #666;
+}
+
+.activity-btn-inner {
+  padding: 0 10px;
+}
+
+.activity-btn:hover {
+  opacity: 0.9;
+}
+
+.activity-btn-time-label {
+  background-color: transparent;
+  box-sizing: border-box;
+  color: black;
+  font: 10px Avenir;
+  height: 20px;
+  line-height: 20px;
+  position: absolute;
+    left: 0;
+    top: 40px;
+  text-align: center;
+  text-shadow: none;
+  width: 100%;
+}
+
+.heading {
+  font-family: Avenir;
+  text-align: center;
+}
+
+.today-breakdown-chart {
+  margin-top: 20px;
+}
+
+.activity-bar {
+  cursor: pointer;
+  stroke: #333;
+  stroke-width: 2px;
+}
+
+.activity-bar:hover {
+  opacity: 0.5;
+}
+
+.breakdown-nav-btn {
+  background-color: #f8f8f8;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  font: 12px Avenir;
+  padding: 2px 6px;
+}
+
+.axis line {
+  fill: none;
+  stroke: #ddd;
+  stroke-dasharray: 1 1;
+  stroke-width: 1;
+}
+
+.axis path {
+  fill: none;
+}
+
+.axis text {
+  fill: #bbb;
+  font: 100 12px Avenir;
+}
+
+.calendar-toggle-container {
+  text-align: center;
+}
+
+.calendar-inner-container {
+  margin: 0 auto;
+}
+
+.day {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  box-sizing: border-box;
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+}
+
+.day-label {
+  font: 500 16px Avenir;
+  position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  text-align: center;
+}
+
+.weekday-label {
+  box-sizing: border-box;
+  color: #bbb;
+  display: inline-block;
+  font: 12px Avenir;
+  margin-bottom: -20px;
+  margin-left: 10px;
+  text-align: center;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently
+                                  not supported by any browser */
+}
+
+.modal-content {
+  border-radius: 0px;
+}
+
+.btn {
+  border-radius: 0;
+}
