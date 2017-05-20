@@ -1,0 +1,101 @@
+* {
+  box-sizing: content-box;
+  font-family: 'Lato', 'Helvetica Neue', Helvetica;
+}
+
+.header-container {
+  align-items: center;
+  background-color: #fbfbfb;
+  border-bottom: 1px solid #f2f2f2;
+  display: flex;
+  font-size: 22px;
+  height: 60px;
+  justify-content: center;
+  width: 100%;
+}
+
+.header-link-active {
+
+}
+
+.header-link-disabled {
+  color: #666;
+}
+
+p {
+  font-size: 17px;
+  line-height: 1.6;
+  margin: 10px 0;
+}
+
+p:first-child {
+  margin-top: 0;
+}
+
+a {
+  color: #00e;
+  font-weight: 600;
+}
+
+ul {
+  list-style-position: outside;
+  margin-left: 35px;
+}
+
+li {
+  font-size: 17px;
+}
+
+.page-container {
+  margin: 20px auto;
+}
+
+.profile-container {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.profile-photo {
+  border-radius: 100%;
+  box-shadow: 1px 1px 4px #666;
+  width: 100%;
+  max-width: 300px;
+}
+
+.icons-container {
+  margin-top: 10px;
+}
+
+.github-icon {
+  fill: #006;
+  margin-right: 8px;
+  width: 25px;
+}
+
+.linkedin-icon {
+  fill: #006;
+  width: 25px;
+}
+
+section {
+  margin-bottom: 20px;
+}
+
+.section-header {
+  color: #006;
+  font-family: 'Lato';
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.section-body {
+
+}
+
+.big-link {
+  color: #00e;
+  font-family: 'Lato';
+  font-size: 18px;
+  font-weight: 600;
+}

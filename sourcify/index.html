@@ -96,7 +96,7 @@
     <div class="slide" data-anchor="compare">
       <div class="page-container">
         <div class="text-content">
-          Sourcify's main strength is its readable source code. This makes it easy to customize and extend. Compare the following two functions, one from <a href="https://github.com/estools/escodegen">Escodegen</a>, currently the most popular JavaScript code generator, and one from Sourcify. These functions do the same thing. They generate update expressions such as <span style="font-family: monospace">i++</span>. But the Sourcify logic is transparent. You just go through, step-by-step, checking conditions and writing to a string. It is true that Sourcify's syntactic sugar comes at a slight performance cost. If speed is all you're after, I have also developed a performant version of Sourcify that is 2.5x the speed of Escodegen, as measured using <a href="https://benchmarkjs.com/">Benchmark</a> in a V8 environment. And even the source of this performant version is fairly easy to understand, customize, and extend.
+          Sourcify's main strength is its readable source code. This makes it easy to customize and extend. Compare the following two functions, one from <a href="https://github.com/estools/escodegen">Escodegen</a>, currently the most popular JavaScript code generator, and one from Sourcify. These functions do the same thing. They generate update expressions such as <span style="font-family: monospace">i++</span>. But the Sourcify logic is transparent. You just go through, step-by-step, checking conditions and writing to a string. It is so clear and uncluttered it hardly even looks like JavaScript! It is true that Sourcify's syntactic sugar comes at a slight performance cost. If speed is all you're after, I have also developed a performant version of Sourcify that is 2.5x the speed of Escodegen, as measured using <a href="https://benchmarkjs.com/">Benchmark</a> in a V8 environment. And even the source of this performant version is fairly easy to understand, customize, and extend.
         </div>
         <div class="compare-container">
           <div class="compare-sourcify">
@@ -117,7 +117,7 @@
     <div class="slide" data-anchor="api">
       <div class="page-container">
         <div class="text-content">
-          Sourcify's API consists of just one function, which is added to the global namespace.
+          Sourcify's API consists of just one function.
           <div style="height: 10px"></div>
           <span style="font-family:monospace"><strong>sourcify</strong><span class="inline-code">(input[, options])</span></span>
           <div style="height: 10px"></div>
@@ -589,14 +589,14 @@
     <div class="slide" data-anchor="source">
       <div class="page-container">
         <div class="text-content">
-          To use Sourcify in the browser, just download sourcify.js and include it in your html. If you are going to pass Sourcify strings, make sure to include Esprima before Sourcify. If you prefer performance over an easy-to-read source code, use sourcify-perf.js instead. Both of these versions rely solely on ES5 features and will work in all modern browsers.
+          Install Sourcify with npm or yarn:
+          <blockquote>npm install sourcify</blockquote>
+          You can also just download sourcify.js and include it in your html. Just make sure to include Esprima before Sourcify. If you prefer performance over an easy-to-read source code, use sourcify-perf.js instead. Both of these versions rely solely on ES5 features and will work in all modern browsers.
           <br>
           <a href="./sourcify.js"><div class="download-btn">Download sourcify.js</div></a>
           <a href="./sourcify-perf.js"><div class="download-btn">Download sourcify-perf.js</div></a>
           <br>
-          You can also use Sourcify in node:
-          <blockquote>npm install sourcify</blockquote>
-          And you can check out the <a href="http://github.com/zjmiller/sourcify">source on Github</a>.
+          Check out the <a href="http://github.com/zjmiller/sourcify">source on Github</a>.
         </div>
       </div>
       <div style="height: 150px"></div>
