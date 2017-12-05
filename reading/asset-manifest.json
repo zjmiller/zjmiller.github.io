@@ -1,10 +1,12 @@
 {
   "main.css": "static/css/main.5ead487e.css",
   "main.css.map": "static/css/main.5ead487e.css.map",
-  "main.js": "static/js/main.f653eb77.js",
-  "main.js.map": "static/js/main.f653eb77.js.map",
+  "main.js": "static/js/main.8fc00790.js",
+  "main.js.map": "static/js/main.8fc00790.js.map",
+  "static/media/back-arrow.svg": "static/media/back-arrow.c5d07098.svg",
   "static/media/bat.m4a": "static/media/bat.a271bab8.m4a",
   "static/media/battleback10.png": "static/media/battleback10.a4686241.png",
+  "static/media/battleback4.png": "static/media/battleback4.36285b26.png",
   "static/media/battleback8.png": "static/media/battleback8.3d7fd049.png",
   "static/media/bee.m4a": "static/media/bee.73978b0a.m4a",
   "static/media/bird.m4a": "static/media/bird.902fc96e.m4a",
@@ -35,6 +37,8 @@
   "static/media/slick.ttf": "static/media/slick.d41f55a7.ttf",
   "static/media/slick.woff": "static/media/slick.b7c9e1e4.woff",
   "static/media/speaker-icon.svg": "static/media/speaker-icon.502251e6.svg",
+  "static/media/spyglass.png": "static/media/spyglass.e002a393.png",
+  "static/media/store-icon.svg": "static/media/store-icon.717d415f.svg",
   "static/media/sun.m4a": "static/media/sun.8b493fc8.m4a",
   "static/media/wood-texture.png": "static/media/wood-texture.6350ef0b.png"
 }
