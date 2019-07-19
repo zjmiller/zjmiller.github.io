@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/ought-ide/static/js/main.9d2c0198.chunk.js",
-    "main.js.map": "/ought-ide/static/js/main.9d2c0198.chunk.js.map",
+    "main.js": "/ought-ide/static/js/main.d81775c3.chunk.js",
+    "main.js.map": "/ought-ide/static/js/main.d81775c3.chunk.js.map",
     "runtime~main.js": "/ought-ide/static/js/runtime~main.99d42dbb.js",
     "runtime~main.js.map": "/ought-ide/static/js/runtime~main.99d42dbb.js.map",
-    "static/js/2.b28517e2.chunk.js": "/ought-ide/static/js/2.b28517e2.chunk.js",
-    "static/js/2.b28517e2.chunk.js.map": "/ought-ide/static/js/2.b28517e2.chunk.js.map",
+    "static/js/2.3eb284d1.chunk.js": "/ought-ide/static/js/2.3eb284d1.chunk.js",
+    "static/js/2.3eb284d1.chunk.js.map": "/ought-ide/static/js/2.3eb284d1.chunk.js.map",
     "index.html": "/ought-ide/index.html",
-    "precache-manifest.bc3832b1ec7b68c9aec71d05222393a0.js": "/ought-ide/precache-manifest.bc3832b1ec7b68c9aec71d05222393a0.js",
+    "precache-manifest.cb847d290243ca2856b0040bb0f3b61b.js": "/ought-ide/precache-manifest.cb847d290243ca2856b0040bb0f3b61b.js",
     "service-worker.js": "/ought-ide/service-worker.js"
   }
 }
