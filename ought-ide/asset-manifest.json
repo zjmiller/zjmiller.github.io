@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.js": "/ought-ide/static/js/main.d81775c3.chunk.js",
-    "main.js.map": "/ought-ide/static/js/main.d81775c3.chunk.js.map",
+    "main.js": "/ought-ide/static/js/main.d1ba33c1.chunk.js",
+    "main.js.map": "/ought-ide/static/js/main.d1ba33c1.chunk.js.map",
     "runtime~main.js": "/ought-ide/static/js/runtime~main.99d42dbb.js",
     "runtime~main.js.map": "/ought-ide/static/js/runtime~main.99d42dbb.js.map",
     "static/js/2.3eb284d1.chunk.js": "/ought-ide/static/js/2.3eb284d1.chunk.js",
     "static/js/2.3eb284d1.chunk.js.map": "/ought-ide/static/js/2.3eb284d1.chunk.js.map",
     "index.html": "/ought-ide/index.html",
-    "precache-manifest.cb847d290243ca2856b0040bb0f3b61b.js": "/ought-ide/precache-manifest.cb847d290243ca2856b0040bb0f3b61b.js",
+    "precache-manifest.aae5f326adf351350ef7528326b7214f.js": "/ought-ide/precache-manifest.aae5f326adf351350ef7528326b7214f.js",
     "service-worker.js": "/ought-ide/service-worker.js"
   }
 }

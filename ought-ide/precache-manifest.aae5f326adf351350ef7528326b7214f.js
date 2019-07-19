@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ce9035d40d54e9fc660e911734721943",
+    "revision": "f59077949c028957a190c6c0a8e875a4",
     "url": "/ought-ide/index.html"
   },
   {
@@ -8,8 +8,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ought-ide/static/js/2.3eb284d1.chunk.js"
   },
   {
-    "revision": "7e0402070bbca8620e35",
-    "url": "/ought-ide/static/js/main.d81775c3.chunk.js"
+    "revision": "c6794f86d78056009129",
+    "url": "/ought-ide/static/js/main.d1ba33c1.chunk.js"
   },
   {
     "revision": "16efe1ac42b328125ea3",
