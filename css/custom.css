@@ -3,22 +3,22 @@
    --------------------------------------------------------------------------- */
 
 :root {
-  --bg: #fcfbf8;
-  --text: #23211c;
-  --muted: #78736a;
-  --faint: #e9e5db;
-  --accent: #2456b8;
-  --ring: rgba(35, 33, 28, 0.08);
-  --shadow: rgba(35, 33, 28, 0.28);
+  --bg: #ffffff;
+  --text: #18181b;
+  --muted: #6b7280;
+  --faint: #e7e8ea;
+  --accent: #2563eb;
+  --ring: rgba(24, 24, 27, 0.08);
+  --shadow: rgba(24, 24, 27, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #181713;
-    --text: #eae7e0;
-    --muted: #9c968a;
-    --faint: #2e2b24;
-    --accent: #9ab8f5;
+    --bg: #101013;
+    --text: #e8e8ec;
+    --muted: #9ca3af;
+    --faint: #2a2a30;
+    --accent: #60a5fa;
     --ring: rgba(255, 255, 255, 0.12);
     --shadow: rgba(0, 0, 0, 0.6);
   }
@@ -91,10 +91,34 @@ body {
   letter-spacing: -0.01em;
 }
 
+/* Header rows: plain divs — adjust the margin-tops below to taste */
+
+.email-row {
+  margin-top: 0;
+}
+
 .icons {
   display: flex;
+  align-items: center;
   gap: 13px;
-  margin-top: 9px;
+  margin-top: 8px;
+}
+
+.email {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.email:hover {
+  color: var(--accent);
+}
+
+.email svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
 }
 
 .icons a {
@@ -153,7 +177,7 @@ body {
   height: 5px;
   border-radius: 50%;
   background: var(--accent);
-  opacity: 0.55;
+  opacity: 0.7;
 }
 
 .detail {
@@ -197,18 +221,25 @@ body {
 /* Links & text ------------------------------------------------------------ */
 
 a {
-  color: inherit;
+  color: var(--accent);
   font-weight: 500;
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-decoration-color: color-mix(in srgb, var(--accent) 30%, transparent);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   transition: color 0.15s ease, text-decoration-color 0.15s ease;
 }
 
 a:hover {
-  color: var(--accent);
   text-decoration-color: var(--accent);
+}
+
+.sub-items a {
+  color: color-mix(in srgb, var(--accent) 65%, var(--muted));
+}
+
+.sub-items a:hover {
+  color: var(--accent);
 }
 
 p {
