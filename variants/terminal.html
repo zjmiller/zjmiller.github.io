@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>zjm — terminal</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --bg: #0a0e13;
+        --window: #0f1620;
+        --chrome: #161f2c;
+        --border: #223041;
+        --text: #c9d4e0;
+        --dim: #718092;
+        --green: #3fd68c;
+        --cyan: #56c8ff;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+        font-size: 15px;
+        line-height: 1.75;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      .switcher {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        padding: 9px 12px;
+        background: rgba(10, 14, 19, 0.9);
+        border-bottom: 1px solid var(--border);
+        font-size: 12px;
+      }
+      .switcher a { color: var(--dim); text-decoration: none; }
+      .switcher a:hover { color: var(--text); }
+      .switcher a.active { color: var(--green); }
+
+      .wrap {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 96px 20px 80px;
+      }
+
+      .window {
+        background: var(--window);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8);
+      }
+
+      .titlebar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 14px;
+        background: var(--chrome);
+        border-bottom: 1px solid var(--border);
+      }
+      .dot { width: 12px; height: 12px; border-radius: 50%; }
+      .dot-r { background: #ff5f57; }
+      .dot-y { background: #febc2e; }
+      .dot-g { background: #28c840; }
+      .titlebar-label {
+        margin-left: 10px;
+        font-size: 12px;
+        color: var(--dim);
+      }
+
+      .term { padding: 28px 30px 36px; }
+
+      .prompt { color: var(--dim); margin-top: 26px; }
+      .prompt:first-child { margin-top: 0; }
+      .prompt .dollar { color: var(--green); }
+      .prompt .cmd { color: var(--text); }
+
+      .id-block {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        margin-top: 14px;
+      }
+
+      .profile-photo {
+        width: 84px;
+        height: 84px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--border);
+        box-shadow: 0 0 0 2px rgba(63, 214, 140, 0.35);
+      }
+
+      .name {
+        font-size: clamp(19px, 4.4vw, 26px);
+        font-weight: 700;
+        color: var(--green);
+        letter-spacing: 0.01em;
+      }
+      .cursor {
+        display: inline-block;
+        width: 0.6em;
+        height: 1.15em;
+        margin-left: 4px;
+        vertical-align: text-bottom;
+        background: var(--green);
+        animation: blink 1.1s steps(1) infinite;
+      }
+      @keyframes blink { 50% { opacity: 0; } }
+
+      .id-links { margin-top: 6px; font-size: 13px; }
+      .id-links a { margin-right: 12px; }
+
+      .items { list-style: none; margin-top: 8px; }
+      .items > li {
+        position: relative;
+        padding-left: 22px;
+        margin-top: 8px;
+      }
+      .items > li::before {
+        content: ">";
+        position: absolute;
+        left: 0;
+        color: var(--green);
+        font-weight: 700;
+      }
+
+      .detail { color: var(--dim); }
+      .detail::before { content: " · "; }
+
+      .sub-items { list-style: none; }
+      .sub-items li {
+        position: relative;
+        padding-left: 22px;
+        margin-top: 4px;
+        font-size: 13.5px;
+        color: var(--dim);
+      }
+      .sub-items li::before {
+        content: "-";
+        position: absolute;
+        left: 4px;
+      }
+
+      a {
+        color: var(--cyan);
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-decoration-color: rgba(86, 200, 255, 0.5);
+        text-underline-offset: 3px;
+      }
+      a:hover {
+        text-decoration-style: solid;
+        text-decoration-color: var(--cyan);
+      }
+
+      .exit-line { margin-top: 30px; color: var(--dim); font-size: 13px; }
+      .exit-line .ok { color: var(--green); }
+
+      @media (max-width: 480px) {
+        .term { padding: 22px 18px 28px; }
+        .id-block { flex-direction: column; align-items: flex-start; gap: 14px; }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="switcher">
+      <a href="./index.html">All styles</a>
+      <a href="../index.html">Current</a>
+      <a href="./swiss.html">Swiss</a>
+      <a class="active" href="./terminal.html">Terminal</a>
+      <a href="./friendly.html">Friendly</a>
+      <a href="./academic.html">Academic</a>
+    </nav>
+    <div class="wrap">
+      <div class="window">
+        <div class="titlebar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="titlebar-label">zjmiller — zsh</span>
+        </div>
+        <div class="term">
+          <p class="prompt"><span class="dollar">$</span> <span class="cmd">whoami</span></p>
+          <div class="id-block">
+            <img class="profile-photo" src="../imgs/website%20photo.jpg" alt="Zachary John Miller">
+            <div>
+              <div class="name">zachary_john_miller<span class="cursor"></span></div>
+              <div class="id-links">
+                <a href="https://github.com/zjmiller">[github]</a>
+                <a href="https://www.linkedin.com/in/zachary-miller-024b3722/">[linkedin]</a>
+              </div>
+            </div>
+          </div>
+
+          <p class="prompt"><span class="dollar">$</span> <span class="cmd">cat currently.md</span></p>
+          <ul class="items">
+            <li>
+              <a href="https://theaidigest.org/">AI Digest</a><span class="detail">member of technical staff</span>
+              <ul class="sub-items">
+                <li>Working on LLM consciousness</li>
+                <li>Built <a href="https://theaidigest.org/village">AI Village</a></li>
+              </ul>
+            </li>
+          </ul>
+
+          <p class="prompt"><span class="dollar">$</span> <span class="cmd">cat previously.md</span></p>
+          <ul class="items">
+            <li>
+              <a href="https://ought.org/">Ought</a> / <a href="https://elicit.com/">Elicit</a><span class="detail">software engineer</span>
+              <ul class="sub-items">
+                <li>On two-engineer team that implemented first version of Elicit</li>
+                <li>Built and maintained platform where OpenAI employees participated weekly in experiments about decomposing cognitive tasks</li>
+              </ul>
+            </li>
+            <li>
+              Built first scaffolding to enable LLM to solve a Sudoku puzzle
+              <ul class="sub-items">
+                <li>OpenAI proactively emailed me for details</li>
+              </ul>
+            </li>
+            <li>Tenure-track philosophy professor at <a href="https://www.ou.edu/">OU</a></li>
+            <li>Philosophy PhD from <a href="https://philosophy.rutgers.edu/">Rutgers</a></li>
+            <li>Contributions to <a href="https://babeljs.io/">Babel</a>, <a href="https://github.com/jquery/esprima">Esprima</a>, and <a href="https://github.com/estools/escodegen">Escodegen</a></li>
+          </ul>
+
+          <p class="exit-line"><span class="ok">✓</span> exit 0</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

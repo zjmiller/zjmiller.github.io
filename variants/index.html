@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Style variants — zjmiller.github.io</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        background: #f4f4f5;
+        color: #18181b;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.6;
+        padding: 60px 24px 80px;
+      }
+
+      .wrap { max-width: 720px; margin: 0 auto; }
+
+      h1 { font-size: 26px; letter-spacing: -0.01em; }
+      .sub { color: #71717a; margin-top: 6px; font-size: 15px; }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+        gap: 16px;
+        margin-top: 32px;
+      }
+
+      .card {
+        display: block;
+        background: #fff;
+        border: 1px solid #e4e4e7;
+        border-radius: 14px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -14px rgba(0, 0, 0, 0.25);
+      }
+
+      .swatch { height: 64px; display: flex; }
+      .swatch span { flex: 1; }
+
+      .card-body { padding: 14px 16px 16px; }
+      .card-title { font-weight: 650; font-size: 15px; }
+      .card-desc { font-size: 13px; color: #71717a; margin-top: 3px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Pick a style</h1>
+      <p class="sub">Five takes on the same content. Click through — each page has a switcher bar at the top.</p>
+      <div class="grid">
+        <a class="card" href="../index.html">
+          <div class="swatch"><span style="background:#fcfbf8"></span><span style="background:#23211c"></span><span style="background:#2456b8"></span></div>
+          <div class="card-body">
+            <div class="card-title">Current — Warm editorial</div>
+            <div class="card-desc">Serif name, paper background, quiet blue accents</div>
+          </div>
+        </a>
+        <a class="card" href="./swiss.html">
+          <div class="swatch"><span style="background:#ffffff"></span><span style="background:#111111"></span><span style="background:#e1251b"></span></div>
+          <div class="card-body">
+            <div class="card-title">Swiss</div>
+            <div class="card-desc">Huge bold type, grayscale photo, red accents</div>
+          </div>
+        </a>
+        <a class="card" href="./terminal.html">
+          <div class="swatch"><span style="background:#0a0e13"></span><span style="background:#0f1620"></span><span style="background:#3fd68c"></span></div>
+          <div class="card-body">
+            <div class="card-title">Terminal</div>
+            <div class="card-desc">Dark monospace terminal window, green prompt</div>
+          </div>
+        </a>
+        <a class="card" href="./friendly.html">
+          <div class="swatch"><span style="background:#ffe4e6"></span><span style="background:#e0e7ff"></span><span style="background:#4f46e5"></span></div>
+          <div class="card-body">
+            <div class="card-title">Friendly</div>
+            <div class="card-desc">Pastel gradients, white card, rounded and playful</div>
+          </div>
+        </a>
+        <a class="card" href="./academic.html">
+          <div class="swatch"><span style="background:#faf6ec"></span><span style="background:#2b2118"></span><span style="background:#7b2d26"></span></div>
+          <div class="card-body">
+            <div class="card-title">Academic</div>
+            <div class="card-desc">Cream paper, Garamond small caps, oxblood links</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

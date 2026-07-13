@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zachary John Miller — Academic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      :root {
+        --paper: #faf6ec;
+        --ink: #2b2118;
+        --muted: #7d7261;
+        --hairline: #e0d8c6;
+        --maroon: #7b2d26;
+      }
+
+      body {
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "EB Garamond", Georgia, "Times New Roman", serif;
+        font-size: 19px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .switcher {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        padding: 9px 12px;
+        background: rgba(43, 33, 24, 0.88);
+        backdrop-filter: blur(6px);
+        font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        font-size: 12px;
+      }
+      .switcher a { color: #cfc5b4; text-decoration: none; }
+      .switcher a:hover { color: #fff; }
+      .switcher a.active { color: #fff; font-weight: 700; }
+
+      .page {
+        max-width: 580px;
+        margin: 0 auto;
+        padding: 120px 24px 100px;
+      }
+
+      .masthead { text-align: center; }
+
+      .profile-photo {
+        width: 124px;
+        height: 124px;
+        border-radius: 50%;
+        object-fit: cover;
+        filter: sepia(0.18) contrast(1.02);
+        box-shadow:
+          0 0 0 1px var(--hairline),
+          0 0 0 7px var(--paper),
+          0 0 0 8px var(--hairline);
+      }
+
+      .name {
+        margin-top: 28px;
+        font-variant: small-caps;
+        font-weight: 500;
+        font-size: clamp(30px, 6.5vw, 40px);
+        letter-spacing: 0.08em;
+        line-height: 1.2;
+      }
+
+      .icons {
+        display: flex;
+        justify-content: center;
+        gap: 18px;
+        margin-top: 14px;
+      }
+      .icons a { display: inline-flex; color: var(--muted); }
+      .icons a:hover { color: var(--maroon); }
+      .icons svg { width: 19px; height: 19px; fill: currentColor; }
+
+      .ornament {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 34px;
+        color: var(--maroon);
+        font-size: 20px;
+      }
+      .ornament::before,
+      .ornament::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--hairline);
+      }
+
+      .section { margin-top: 44px; }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-variant: small-caps;
+        font-weight: 600;
+        font-size: 21px;
+        letter-spacing: 0.12em;
+        color: var(--maroon);
+        justify-content: center;
+      }
+      .section-title::before,
+      .section-title::after {
+        content: "—";
+        color: var(--hairline);
+        font-weight: 400;
+      }
+
+      .items { list-style: none; margin-top: 18px; }
+      .items > li {
+        position: relative;
+        padding-left: 26px;
+        margin-top: 10px;
+      }
+      .items > li::before {
+        content: "·";
+        position: absolute;
+        left: 6px;
+        color: var(--maroon);
+        font-weight: 600;
+      }
+
+      .detail { font-style: italic; color: var(--muted); }
+      .detail::before { content: ", "; }
+
+      .sub-items { list-style: none; margin: 6px 0 4px; }
+      .sub-items li {
+        position: relative;
+        padding-left: 24px;
+        margin-top: 4px;
+        font-size: 16.5px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .sub-items li::before {
+        content: "–";
+        position: absolute;
+        left: 4px;
+      }
+
+      a {
+        color: var(--maroon);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-decoration-color: rgba(123, 45, 38, 0.35);
+        text-underline-offset: 3.5px;
+        transition: text-decoration-color 0.15s ease;
+      }
+      a:hover { text-decoration-color: var(--maroon); }
+
+      .colophon {
+        margin-top: 64px;
+        text-align: center;
+        font-style: italic;
+        font-size: 15px;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="switcher">
+      <a href="./index.html">All styles</a>
+      <a href="../index.html">Current</a>
+      <a href="./swiss.html">Swiss</a>
+      <a href="./terminal.html">Terminal</a>
+      <a href="./friendly.html">Friendly</a>
+      <a class="active" href="./academic.html">Academic</a>
+    </nav>
+    <main class="page">
+      <header class="masthead">
+        <img class="profile-photo" src="../imgs/website%20photo.jpg" alt="Zachary John Miller">
+        <h1 class="name">Zachary John Miller</h1>
+        <div class="icons">
+          <a href="https://github.com/zjmiller" aria-label="GitHub"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M8 0C3.58 0 0 3.582 0 8c0 3.535 2.292 6.533 5.47 7.59.4.075.547-.172.547-.385 0-.19-.007-.693-.01-1.36-2.226.483-2.695-1.073-2.695-1.073-.364-.924-.89-1.17-.89-1.17-.725-.496.056-.486.056-.486.803.056 1.225.824 1.225.824.714 1.223 1.873.87 2.33.665.072-.517.278-.87.507-1.07-1.777-.2-3.644-.888-3.644-3.953 0-.873.31-1.587.823-2.147-.09-.202-.36-1.015.07-2.117 0 0 .67-.215 2.2.82.64-.178 1.32-.266 2-.27.68.004 1.36.092 2 .27 1.52-1.035 2.19-.82 2.19-.82.43 1.102.16 1.915.08 2.117.51.56.82 1.274.82 2.147 0 3.073-1.87 3.75-3.65 3.947.28.24.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.14.46.55.38C13.71 14.53 16 11.53 16 8c0-4.418-3.582-8-8-8"/></svg></a>
+          <a href="https://www.linkedin.com/in/zachary-miller-024b3722/" aria-label="LinkedIn"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M13.632 13.635h-2.37V9.922c0-.886-.018-2.025-1.234-2.025-1.235 0-1.424.964-1.424 1.96v3.778h-2.37V6H8.51v1.04h.03c.318-.6 1.092-1.233 2.247-1.233 2.4 0 2.845 1.58 2.845 3.637v4.188zM3.558 4.955c-.762 0-1.376-.617-1.376-1.377 0-.758.614-1.375 1.376-1.375.76 0 1.376.617 1.376 1.375 0 .76-.617 1.377-1.376 1.377zm1.188 8.68H2.37V6h2.376v7.635zM14.816 0H1.18C.528 0 0 .516 0 1.153v13.694C0 15.484.528 16 1.18 16h13.635c.652 0 1.185-.516 1.185-1.153V1.153C16 .516 15.467 0 14.815 0z"/></svg></a>
+        </div>
+        <div class="ornament">❦</div>
+      </header>
+
+      <section class="section">
+        <h2 class="section-title">Currently</h2>
+        <ul class="items">
+          <li>
+            <a href="https://theaidigest.org/">AI Digest</a><span class="detail">member of technical staff</span>
+            <ul class="sub-items">
+              <li>Working on LLM consciousness</li>
+              <li>Built <a href="https://theaidigest.org/village">AI Village</a></li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2 class="section-title">Previously</h2>
+        <ul class="items">
+          <li>
+            <a href="https://ought.org/">Ought</a> / <a href="https://elicit.com/">Elicit</a><span class="detail">software engineer</span>
+            <ul class="sub-items">
+              <li>On two-engineer team that implemented first version of Elicit</li>
+              <li>Built and maintained platform where OpenAI employees participated weekly in experiments about decomposing cognitive tasks</li>
+            </ul>
+          </li>
+          <li>
+            Built first scaffolding to enable LLM to solve a Sudoku puzzle
+            <ul class="sub-items">
+              <li>OpenAI proactively emailed me for details</li>
+            </ul>
+          </li>
+          <li>Tenure-track philosophy professor at <a href="https://www.ou.edu/">OU</a></li>
+          <li>Philosophy PhD from <a href="https://philosophy.rutgers.edu/">Rutgers</a></li>
+          <li>Contributions to <a href="https://babeljs.io/">Babel</a>, <a href="https://github.com/jquery/esprima">Esprima</a>, and <a href="https://github.com/estools/escodegen">Escodegen</a></li>
+        </ul>
+      </section>
+
+    </main>
+  </body>
+</html>
