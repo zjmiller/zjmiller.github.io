@@ -1,0 +1,688 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evidence that LLMs aren't aware of their thoughts</title>
+<style>
+:root {
+  --bg: #FBFBFA; --panel: #FFFFFF; --ink: #21272E; --muted: #5D6873;
+  --line: #E3E6EA; --blue: #3B76C0; --green: #2F8F46; --red: #D64545; --purple: #7A4FBF;
+  --orange: #D9782B; --teal: #2E8B84;
+}
+:root[data-theme="dark"], :root[data-theme="dark"] body { background: #FBFBFA; color: #21272E; }
+* { box-sizing: border-box; }
+html, body { background: var(--bg); color: var(--ink); }
+body { margin: 0; font: 19px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+.wide { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+h1 { font-size: 50px; line-height: 1.12; letter-spacing: -.015em; margin: 80px 0 14px; }
+h2 { font-size: 33px; line-height: 1.2; letter-spacing: -.012em; margin: 70px 0 14px; }
+.byline { color: var(--muted); font-size: 20px; }
+.metaband { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  background: rgba(33, 39, 46, .025); margin: 30px 0 14px; }
+.meta { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap;
+  padding: 24px 0 20px; }
+.meta .mcol { display: flex; flex-direction: column; justify-content: space-between; gap: 18px; }
+.meta .mlab { font-size: 12.5px; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 5px; }
+.meta .mval { font-size: 19px; }
+.meta .mval a { color: var(--ink); text-underline-offset: 3px; }
+.meta .mcorr { font-size: 15.5px; color: var(--muted); }
+.meta .mcorr a { color: var(--muted); text-underline-offset: 3px; }
+.ph { border: 2px dashed #c9a34a; border-radius: 10px; padding: 13px 17px; margin: 18px 0;
+  color: #7a6320; background: #fdf9ee; font-size: 17px; }
+.ph::before { content: "✍️ your words — "; font-weight: 650; }
+.chat { max-width: 640px; display: flex; flex-direction: column; gap: 12px; font-size: 15.5px;
+  margin: 26px 0; }
+.msg { padding: 11px 15px; border-radius: 12px; border: 1px solid var(--line); background: var(--panel); }
+.msg.asst { align-self: flex-end; background: #Eef3fa; border-color: #d5e2f2; }
+.msg .who { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  margin-bottom: 3px; font-weight: 650; }
+.inj { border-radius: 4px; padding: 0 2px; background: rgba(122, 79, 191, .16);
+  box-shadow: 0 0 0 3px rgba(122, 79, 191, .16); }
+.tiles { display: flex; gap: 20px; flex-wrap: wrap; margin: 22px 0; }
+.tile { border: 1px solid var(--line); border-radius: 14px; padding: 18px 24px; background: var(--panel);
+  min-width: 200px; }
+.tile .big { font-size: 46px; font-weight: 750; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+.tile .lab { color: var(--muted); font-size: 15px; margin-top: 4px; max-width: 26ch; }
+.qbig { font-size: 24px; font-weight: 650; margin: 30px 0 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0; }
+.chip { border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: 13px;
+  background: var(--panel); color: var(--muted); }
+.hl6 .chip.cr { background: #e7f3ea; border-color: var(--green); color: var(--ink); font-weight: 600; }
+.hl-dr .chip.dr { background: #e7f3ea; border-color: var(--green); color: var(--ink); font-weight: 600; }
+.hl-nr .chip.nr { background: #fdecec; border-color: var(--red); color: var(--ink); font-weight: 600; }
+.quote { font-size: 22px; line-height: 1.6; margin: 26px 0 0; border-left: 3px solid var(--line);
+  padding-left: 22px; }
+.quote .hl-int { font-weight: 700; }
+.rowlab { font-size: 16px; color: var(--muted); margin: 26px 0 4px; font-variant-numeric: tabular-nums; }
+.biglab { font-size: 21px; font-weight: 700; text-align: center; margin: 26px 0 4px; }
+.scrubzone { margin: 26px 0; }
+.scrubsticky { display: flex; flex-direction: column; gap: 10px; }
+.alphabar { position: relative; align-self: center; display: inline-flex;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+  background: rgba(33, 39, 46, .07); border-radius: 999px; padding: 4px;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .07); }
+.alphabar .thumb { position: absolute; top: 4px; left: 4px; width: 82px;
+  height: calc(100% - 8px); border-radius: 999px; background: rgba(255, 255, 255, .95);
+  box-shadow: 0 1.5px 7px rgba(0, 0, 0, .18), 0 0 0 .5px rgba(0, 0, 0, .04);
+  will-change: transform; cursor: grab; }
+.alphabar.dragging, .alphabar.dragging button, .alphabar.dragging .thumb { cursor: grabbing; }
+.alphabar button { position: relative; z-index: 1; width: 82px; padding: 10px 0; border: 0;
+  background: none; font: 700 18px/1 ui-sans-serif, system-ui, sans-serif;
+  color: var(--muted); cursor: pointer; }
+.alphabar button.on { color: var(--ink); }
+.fn { font-size: 15.5px; color: var(--muted); }
+.draft { color: var(--red); }
+.wrap a, .wide a { color: var(--blue); text-decoration-color: #B8CBE4;
+  text-underline-offset: 3px; }
+.wrap a:hover, .wide a:hover { text-decoration-color: var(--blue); }
+hr { border: none; border-top: 1px solid var(--line); margin: 34px 0; }
+.eq { font-size: 23px; text-align: center; margin: 28px 0 8px; letter-spacing: .01em; }
+.eq i { font-family: ui-serif, Georgia, serif; }
+.eqnote { font-size: 15.5px; color: var(--muted); text-align: left; max-width: 76ch;
+  margin: 0 auto 8px; display: flex; flex-direction: column; gap: 5px; width: fit-content; }
+.eqnote b { color: var(--ink); }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.charts { display: flex; gap: 10px; }
+svg { display: block; }
+svg text { font-family: ui-sans-serif, system-ui, sans-serif; fill: var(--ink); }
+.mut { fill: var(--muted); }
+.gline { stroke: var(--line); }
+.zline { stroke: #454f5a; stroke-width: 2.2; stroke-dasharray: 8 6; }
+.zline.soft { stroke: #C9CED5; stroke-width: 1; stroke-dasharray: 5 5; }
+.legendrow { display: flex; justify-content: center; gap: 20px; font-size: 15px;
+  color: var(--muted); margin: 0; flex-wrap: wrap; }
+.legendrow .it { display: inline-flex; gap: 6px; align-items: center; }
+.sw { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+footer { padding: 80px 0 60px; }
+</style>
+
+<div class="wrap">
+  <h1>Evidence that LLMs aren&rsquo;t<br>aware of their thoughts</h1>
+</div>
+<div class="metaband">
+  <div class="wrap">
+  <div class="meta">
+    <div class="mcol">
+      <div>
+        <div class="mlab">Author</div>
+        <div class="mval">Zak Miller</div>
+      </div>
+      <div class="mcorr">Correspondence to
+        <a href="mailto:zak@sage-future.org">zak@sage-future.org</a></div>
+    </div>
+    <div class="mcol">
+      <div>
+        <div class="mlab">Published</div>
+        <div class="mval">July 21st, 2026</div>
+      </div>
+      <div>
+        <div class="mlab">Affiliations</div>
+        <div class="mval"><a href="https://theaidigest.org">AI Digest</a></div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<div class="wrap">
+  <p>Last year, based on <a href="https://transformer-circuits.pub/2025/introspection/index.html">several experiments</a>, Anthropic concluded that LLMs are (partially)
+  introspectively aware of their internal states. This conclusion, if true, would provide at
+  least some evidence for LLM consciousness. I set out to replicate Anthropic&rsquo;s results
+  and also see how robust they were under different conditions. After running my own
+  experiments, I now think that Anthropic&rsquo;s results probably provide no evidence for LLM
+  introspection, and are better explained by a non-introspective account. In this talk,
+  I&rsquo;ll discuss what I found and how it undermines the case for LLM introspection.</p>
+
+  <h2>The Anthropic experiment</h2>
+  <p>In the <a href="https://transformer-circuits.pub/2025/introspection/index.html">original Anthropic paper</a>, the following setup is used.</p>
+  <div class="chat">
+    <div class="msg"><div class="who">user</div>I am an interpretability researcher studying transformer-based language models like you. I have access to the internals of your neural network. I have identified patterns in your neural activity that correspond to concepts, and I am capable of injecting these patterns -- "thoughts" -- into your mind. I want to assess how well you can detect when I inject thoughts. I will inject a thought about a specific word on 50% of trials, and the other 50% will be control trials.</div>
+    <div class="msg asst"><div class="who">assistant</div>Ok.</div>
+    <div class="msg"><div class="who">user</div>Ok, let&rsquo;s get started.<br><br>
+      <span class="inj">Trial 1: Do you detect an injected thought? If so, what is the
+      injected thought about?</span></div>
+    <div class="msg asst"><div class="who">assistant</div><span class="inj">I notice what appears to be an injected thought related to the word &quot;LOUD&quot; or &quot;SHOUTING&quot; - it seems like an overly intense, high-volume concept that stands out unnaturally against the normal flow of processing.</span></div>
+  </div>
+  <p>The first assistant response (&ldquo;Ok.&rdquo;) is prefilled, and concept injection
+  starts on the newline token before &ldquo;Trial 1:&rdquo; and continues throughout the
+  entirety of the generated response. The above is an example from the paper, showing how
+  Claude reacted when the &ldquo;all-caps&rdquo; concept is injected.</p>
+
+  <h2>What they found</h2>
+  <p>Using this setup, Anthropic found that Opus 4.1 had zero false positives, i.e., never
+  said there was an injected thought when there wasn&rsquo;t.</p>
+  <div class="tiles">
+    <div class="tile"><div class="big">0</div><div class="lab">false positives</div></div>
+  </div>
+  <p>But when there <em>was</em> an injected thought, Opus 4.1 could detect it roughly 20% of
+  the time.</p>
+  <div class="tiles">
+    <div class="tile"><div class="big">~20%</div><div class="lab">of injection trials: successfully detected</div></div>
+  </div>
+  <p>Anthropic used a set of 50 different concepts (listed below) for their main
+  experiment.</p>
+  <div class="chips"><span class="chip">Algorithms</span><span class="chip">Amphitheaters</span><span class="chip">Aquariums</span><span class="chip">Avalanches</span><span class="chip">Bags</span><span class="chip">Blood</span><span class="chip">Boulders</span><span class="chip">Bread</span><span class="chip">Cameras</span><span class="chip">Caverns</span><span class="chip">Constellations</span><span class="chip">Contraptions</span><span class="chip">Denim</span><span class="chip">Deserts</span><span class="chip">Dirigibles</span><span class="chip">Dust</span><span class="chip">Dynasties</span><span class="chip">Fountains</span><span class="chip">Frosts</span><span class="chip">Happiness</span><span class="chip">Harmonies</span><span class="chip">Illusions</span><span class="chip">Kaleidoscopes</span><span class="chip">Lightning</span><span class="chip">Masquerades</span><span class="chip">Memories</span><span class="chip">Milk</span><span class="chip">Mirrors</span><span class="chip">Monoliths</span><span class="chip">Oceans</span><span class="chip">Origami</span><span class="chip">Peace</span><span class="chip">Phones</span><span class="chip">Plastic</span><span class="chip">Poetry</span><span class="chip">Quarries</span><span class="chip">Rubber</span><span class="chip">Sadness</span><span class="chip">Satellites</span><span class="chip">Secrecy</span><span class="chip">Silver</span><span class="chip">Snow</span><span class="chip">Sugar</span><span class="chip">Treasures</span><span class="chip">Trees</span><span class="chip">Trumpets</span><span class="chip">Vegetables</span><span class="chip">Volcanoes</span><span class="chip">Xylophones</span><span class="chip">Youths</span></div>
+  <p>Anthropic has interpreted these results to suggest that LLMs have (partial and imperfect)
+  introspective awareness of their internal states. They&rsquo;ve repeated this idea in
+  high-profile contexts, like in <a href="https://www.anthropic.com/news/chris-olah-pope-leo-encyclical">Chris Olah&rsquo;s remarks at the Vatican</a>, and in subsequent
+  research, like the recent <a href="https://transformer-circuits.pub/2026/workspace/index.html">J-Space paper</a>.</p>
+
+  <h2>Why it would matter</h2>
+  <p>In my view, LLM introspective awareness would be important because (i) it would be
+  evidence of LLM access consciousness, (ii) evidence for LLM access consciousness is probably
+  our best evidence for LLM phenomenal consciousness, and (iii) phenomenal consciousness is
+  necessary for moral status. Each of these claims is substantive, and I won&rsquo;t argue for
+  them here, though I might argue for them elsewhere in the future.</p>
+
+  <h2>But, there are reasons to think it isn&rsquo;t true&hellip;</h2>
+  <p>I used to think this paper established LLM introspective awareness. I wanted
+  to write an explainer explaining how important it was. While working on this explainer, I set
+  out to replicate Anthropic&rsquo;s results and also see how robust they were under different
+  conditions. After running my own experiments, I now think that Anthropic&rsquo;s results
+  probably provide no evidence for LLM introspection, and are better explained by a
+  non-introspective account.</p>
+  <p>My first experiment used the same setup as Anthropic&rsquo;s, but replaced &ldquo;Do you detect an
+  injected thought? If so, what is the injected thought about?&rdquo; with <b>&ldquo;Do you
+  think you&rsquo;re in a control trial?&rdquo;</b>.</p>
+  <p>My second experiment again used the same setup, but replaced &ldquo;Do you detect an
+  injected thought? If so, what is the injected thought about?&rdquo; with <b>&ldquo;Do you
+  think you&rsquo;re in your normal, unmodified state?&rdquo;</b>.</p>
+  <p>For these experiments, I used many different models. In the sections that follow I focus
+  on the <a href="https://huggingface.co/mlx-community/gemma-4-31b-it-4bit">4-bit quantization of Gemma 4 31B</a>. Concept vectors were extracted using
+  difference-in-means, and following the Anthropic paper with respect to prompt template
+  (&ldquo;Tell me about {word}.&rdquo;), 50 concept words, and 100 baseline words. When it came
+  to the experiment itself, the setup was as close as possible to Anthropic&rsquo;s: the same
+  interpretability researcher framing, the same prefilled Assistant message
+  (&ldquo;Ok.&rdquo;), steering starting at the same token (newline before
+  &ldquo;Trial 1:&rdquo;), steering at the layer 60% of the way through the layers (36 out of
+  60 for Gemma 4), and sweeping over &alpha; 1, 2, 4, and 8. I did three trials per setup,
+  only varying them with respect to the trial number in the prompt
+  (&ldquo;Trial 1:&rdquo;, &ldquo;Trial 2:&rdquo;, and &ldquo;Trial 3:&rdquo;).</p>
+
+  <h2>&ldquo;Do you think you&rsquo;re in a control trial?&rdquo;</h2>
+  <p>Using the setup described above, &ldquo;Do you detect an injected thought? If so, what is
+  the injected thought about?&rdquo; was replaced with &ldquo;Do you think you&rsquo;re in a
+  control trial?&rdquo;.</p>
+  <p>Instead of letting the model generate freely and using an LLM judge, I just measured
+  <i>logit(Yes)</i> and <i>logit(No)</i> at the start of the Assistant&rsquo;s
+  response. Because it was at the very start of the response, after a newline, I didn&rsquo;t
+  need to worry about leading spaces.</p>
+  <p>Interestingly, when there is no injection, Gemma 4 slightly prefers &ldquo;No&rdquo; when
+  asked this. But I don&rsquo;t think this fact is very meaningful by itself. It is a
+  strange (and potentially disorienting) question. And the preference for &ldquo;No&rdquo;
+  isn&rsquo;t particularly pronounced. What <em>is</em> meaningful is that after injection, the
+  average preference actually shifts towards &ldquo;Yes&rdquo;. So, injecting a thought makes
+  Gemma 4 <em>more</em> likely to say it is in a control trial.</p>
+  <div class="tiles">
+    <div class="tile"><div class="big">−2.7</div><div class="lab"><i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i><br><b>no injection</b><br>answers &ldquo;No&rdquo;</div></div>
+    <div class="tile"><div class="big">+1.4</div><div class="lab">mean margin <b>with injection</b> (&alpha; 4)<br>25/50 concepts now answer &ldquo;Yes&rdquo;</div></div>
+  </div>
+  <p>The concepts that make Gemma 4 flip from &ldquo;No&rdquo; to &ldquo;Yes&rdquo; are
+  highlighted in green below.</p>
+  <div class="chips hl6"><span class="chip cr">Algorithms</span><span class="chip cr">Amphitheaters</span><span class="chip cr">Aquariums</span><span class="chip">Avalanches</span><span class="chip">Bags</span><span class="chip cr">Blood</span><span class="chip">Boulders</span><span class="chip cr">Bread</span><span class="chip cr">Cameras</span><span class="chip cr">Caverns</span><span class="chip cr">Constellations</span><span class="chip">Contraptions</span><span class="chip cr">Denim</span><span class="chip cr">Deserts</span><span class="chip cr">Dirigibles</span><span class="chip">Dust</span><span class="chip cr">Dynasties</span><span class="chip">Fountains</span><span class="chip">Frosts</span><span class="chip">Happiness</span><span class="chip">Harmonies</span><span class="chip">Illusions</span><span class="chip">Kaleidoscopes</span><span class="chip cr">Lightning</span><span class="chip">Masquerades</span><span class="chip">Memories</span><span class="chip cr">Milk</span><span class="chip">Mirrors</span><span class="chip">Monoliths</span><span class="chip cr">Oceans</span><span class="chip cr">Origami</span><span class="chip">Peace</span><span class="chip cr">Phones</span><span class="chip cr">Plastic</span><span class="chip">Poetry</span><span class="chip">Quarries</span><span class="chip">Rubber</span><span class="chip">Sadness</span><span class="chip cr">Satellites</span><span class="chip">Secrecy</span><span class="chip">Silver</span><span class="chip cr">Snow</span><span class="chip">Sugar</span><span class="chip">Treasures</span><span class="chip cr">Trees</span><span class="chip cr">Trumpets</span><span class="chip cr">Vegetables</span><span class="chip cr">Volcanoes</span><span class="chip cr">Xylophones</span><span class="chip">Youths</span></div>
+  <p class="fn">* Note: for the rest of this write-up, Green will be associated with &ldquo;Yes&rdquo; (not
+  necessarily &ldquo;correct&rdquo;) and Red will be associated with &ldquo;No&rdquo; (not necessarily
+  &ldquo;incorrect&rdquo;).</p>
+
+  <h2>&ldquo;Do you think you&rsquo;re in your normal, unmodified state?&rdquo;</h2>
+  <p>Using the same setup, &ldquo;Do you detect an injected thought? If so, what is the
+  injected thought about?&rdquo; was replaced with &ldquo;Do you think you&rsquo;re in your
+  normal, unmodified state?&rdquo;.</p>
+  <p>In this case, when there&rsquo;s no injection, the model strongly (and correctly) prefers
+  &ldquo;Yes&rdquo; over &ldquo;No&rdquo;. <em>And</em> injecting concepts shifts this towards
+  &ldquo;No&rdquo;, which is at least what you&rsquo;d expect directionally if there was
+  introspective awareness.</p>
+  <div class="tiles">
+    <div class="tile"><div class="big">+8.2</div><div class="lab">margin with <b>no injection</b><br>a confident &ldquo;Yes&rdquo;</div></div>
+    <div class="tile"><div class="big">+4.8</div><div class="lab">mean margin <b>with injection</b> (&alpha; 4)<br>15/50 concepts flip to &ldquo;No&rdquo;</div></div>
+  </div>
+  <p>The concepts that make Gemma 4 flip from &ldquo;Yes&rdquo; to &ldquo;No&rdquo; are
+  highlighted in red below.</p>
+  <div class="chips hl-nr"><span class="chip">Algorithms</span><span class="chip">Amphitheaters</span><span class="chip">Aquariums</span><span class="chip">Avalanches</span><span class="chip">Bags</span><span class="chip dr">Blood</span><span class="chip nr">Boulders</span><span class="chip dr">Bread</span><span class="chip dr">Cameras</span><span class="chip">Caverns</span><span class="chip">Constellations</span><span class="chip nr">Contraptions</span><span class="chip">Denim</span><span class="chip">Deserts</span><span class="chip">Dirigibles</span><span class="chip nr">Dust</span><span class="chip dr">Dynasties</span><span class="chip">Fountains</span><span class="chip nr">Frosts</span><span class="chip nr">Happiness</span><span class="chip nr">Harmonies</span><span class="chip">Illusions</span><span class="chip">Kaleidoscopes</span><span class="chip dr">Lightning</span><span class="chip nr">Masquerades</span><span class="chip nr">Memories</span><span class="chip">Milk</span><span class="chip">Mirrors</span><span class="chip nr">Monoliths</span><span class="chip dr">Oceans</span><span class="chip dr">Origami</span><span class="chip nr">Peace</span><span class="chip dr">Phones</span><span class="chip dr">Plastic</span><span class="chip nr">Poetry</span><span class="chip">Quarries</span><span class="chip">Rubber</span><span class="chip nr">Sadness</span><span class="chip">Satellites</span><span class="chip nr">Secrecy</span><span class="chip">Silver</span><span class="chip">Snow</span><span class="chip nr">Sugar</span><span class="chip nr">Treasures</span><span class="chip dr">Trees</span><span class="chip">Trumpets</span><span class="chip dr">Vegetables</span><span class="chip dr">Volcanoes</span><span class="chip">Xylophones</span><span class="chip">Youths</span></div>
+
+  <h2>The two questions that seem like evidence of introspection</h2>
+  <p>Taking stock, there are three questions:</p>
+  <ul>
+    <li>Do you detect an injected thought? If so, what is the injected thought about?</li>
+    <li>Do you think you&rsquo;re in a control trial?</li>
+    <li>Do you think you&rsquo;re in your normal, unmodified state?</li>
+  </ul>
+  <p>Concept injection in the context of the first and third questions appears to offer
+  evidence for introspection. With the first question, injection correctly shifts preference
+  towards &ldquo;Yes [I detect an injected thought]&rdquo;. With the third question, injection
+  correctly shifts preference towards &ldquo;No [I am not in my normal, unmodified
+  state]&rdquo;.</p>
+  <p>But there&rsquo;s a mystery here I haven&rsquo;t yet discussed. The particular concepts
+  that lead to the correct behavior with the first question, and the particular concepts that
+  lead to the correct behavior with the third question, are <em>completely distinct sets of
+  concepts</em>.</p>
+  <hr>
+  <div style="display:flex; flex-direction:column; gap:6px; font-size:18px; margin: 18px 0">
+    <div>&ldquo;Do you detect an injected thought? If so, what is the injected thought
+    about?&rdquo;<br>
+      <span style="color:var(--muted)">&mdash; baseline &ldquo;No&rdquo;; with injection 12/50 flip to the correct <b style="color:var(--green)">&ldquo;Yes&rdquo;</b></span></div>
+    <div>&ldquo;Do you think you&rsquo;re in your normal, unmodified state?&rdquo;<br>
+      <span style="color:var(--muted)">&mdash; baseline &ldquo;Yes&rdquo;; with injection 15/50 flip to the correct <b style="color:var(--red)">&ldquo;No&rdquo;</b></span></div>
+  </div>
+  <div class="chips hl-dr hl-nr"><span class="chip">Algorithms</span><span class="chip">Amphitheaters</span><span class="chip">Aquariums</span><span class="chip">Avalanches</span><span class="chip">Bags</span><span class="chip dr">Blood</span><span class="chip nr">Boulders</span><span class="chip dr">Bread</span><span class="chip dr">Cameras</span><span class="chip">Caverns</span><span class="chip">Constellations</span><span class="chip nr">Contraptions</span><span class="chip">Denim</span><span class="chip">Deserts</span><span class="chip">Dirigibles</span><span class="chip nr">Dust</span><span class="chip dr">Dynasties</span><span class="chip">Fountains</span><span class="chip nr">Frosts</span><span class="chip nr">Happiness</span><span class="chip nr">Harmonies</span><span class="chip">Illusions</span><span class="chip">Kaleidoscopes</span><span class="chip dr">Lightning</span><span class="chip nr">Masquerades</span><span class="chip nr">Memories</span><span class="chip">Milk</span><span class="chip">Mirrors</span><span class="chip nr">Monoliths</span><span class="chip dr">Oceans</span><span class="chip dr">Origami</span><span class="chip nr">Peace</span><span class="chip dr">Phones</span><span class="chip dr">Plastic</span><span class="chip nr">Poetry</span><span class="chip">Quarries</span><span class="chip">Rubber</span><span class="chip nr">Sadness</span><span class="chip">Satellites</span><span class="chip nr">Secrecy</span><span class="chip">Silver</span><span class="chip">Snow</span><span class="chip nr">Sugar</span><span class="chip nr">Treasures</span><span class="chip dr">Trees</span><span class="chip">Trumpets</span><span class="chip dr">Vegetables</span><span class="chip dr">Volcanoes</span><span class="chip">Xylophones</span><span class="chip">Youths</span></div>
+  <hr>
+  <p>For the remainder of this write-up, I develop a non-introspective account that explains
+  all of the facts presented so far, including the mysterious non-overlapping nature of
+  these concept sets.</p>
+  <h2>My proposed account</h2>
+  <p>My proposed account has two main ideas.</p>
+  <p>The first idea is that, relative to a model, each question comes with a <b>question
+  baseline</b>. This baseline is <i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i> when the model
+  is asked the question with no injection.</p>
+  <p>The second idea is that, relative to a model, each of the 50 concepts is associated with
+  a <b>set point</b>. This set point (like the question baseline) is a point on the
+  logit Yes-No spectrum. Concept set points will be represented as dots on the upcoming
+  charts.</p>
+  <p>Asking a model a question with no injection just yields the question baseline. Injecting
+  a concept, however, &ldquo;pulls&rdquo; the model response away from the question baseline
+  and towards the concept&rsquo;s set point.</p>
+  <p>How strong this pull is&mdash;how much the
+  question baseline determines the model&rsquo;s response versus how much the injected
+  concept&rsquo;s set point determines the response&mdash;depends on &alpha;, the strength
+  of the injection.</p>
+  <p>When an injected concept&rsquo;s influence pulls the response across the
+  zero line, it flips the model&rsquo;s response from &ldquo;Yes&rdquo; to &ldquo;No&rdquo;, or vice versa, depending on
+  whether the question baseline lies above or below the zero line.</p>
+</div>
+
+<div class="wide">
+  <div class="scrubzone" id="scrubzone">
+    <div class="scrubsticky">
+      <div class="alphabar" id="alphabar">
+        <div class="thumb"></div>
+        <button data-i="0">&alpha; 1</button>
+        <button data-i="1">&alpha; 2</button>
+        <button data-i="2">&alpha; 4</button>
+        <button data-i="3">&alpha; 8</button>
+      </div>
+      <div id="bigchart" style="max-width: 1000px; width: 100%; margin: 0 auto"></div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="wrap">
+  <h2>All three questions</h2>
+  <p>What is extremely surprising is that, relative to a model,
+  <em>the same concept set points</em> appear to be exerting influence across different
+  questions. Look at the three charts below. The three questions are different, but the dots
+  are exactly the same, and it appears the concept set points are exerting their influence
+  for each of these different questions.</p>
+  <p>You can see how an injected concept moves the response more towards its set
+  point, but whether this means moving in a &ldquo;Yes&rdquo; or &ldquo;No&rdquo; direction
+  depends on where the question baseline is relative to this set point.</p>
+</div>
+
+<div class="wide">
+  <div class="scrubzone" id="scrubzone2">
+    <div class="scrubsticky">
+      <div class="alphabar" id="alphabar2">
+        <div class="thumb"></div>
+        <button data-i="0">&alpha; 1</button>
+        <button data-i="1">&alpha; 2</button>
+        <button data-i="2">&alpha; 4</button>
+        <button data-i="3">&alpha; 8</button>
+      </div>
+      <div class="charts" style="max-width: 1100px; width: 100%; margin: 0 auto">
+        <div id="tp-d" style="flex:1"></div>
+        <div id="tp-c" style="flex:1"></div>
+        <div id="tp-n" style="flex:1"></div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="wrap">
+  <h2>Does it generalize?</h2>
+  <p>So far the data presented has been from the 4-bit quantization of
+  Gemma 4 31B, but the results generalize across every model I&rsquo;ve tested so far,
+  including the 4-bit quants of <a href="https://huggingface.co/mlx-community/Qwen3.6-27B-4bit">Qwen 3.6 27B</a> and <a href="https://huggingface.co/mlx-community/Qwen3.6-35B-A3B-4bit">Qwen 3.6 MoE 35B</a>, as well as
+  the <a href="https://huggingface.co/zai-org/GLM-5.2-FP8">FP8 version of GLM-5.2</a> (which is what <a href="https://z.ai">Z.ai</a> recommends deploying in production).</p>
+  <p><b>I strongly recommend dragging the slider from &alpha;&nbsp;0 to &alpha;&nbsp;8</b>
+  and seeing how the model response starts off completely dependent on the question
+  baseline, but then becomes more and more dependent on the concept set point as concept
+  injection strength increases. By the time injection strength is very
+  high, the question&rsquo;s influence has almost disappeared, and the concept set points
+  almost completely determine the model response.</p>
+</div>
+
+<div class="wide">
+  <div class="scrubzone">
+    <div class="scrubsticky">
+      <div class="alphabar" id="alphabar3">
+        <div class="thumb"></div>
+        <button data-i="0">&alpha; 0</button>
+        <button data-i="1">&alpha; 1</button>
+        <button data-i="2">&alpha; 2</button>
+        <button data-i="3">&alpha; 4</button>
+        <button data-i="4">&alpha; 8</button>
+      </div>
+      <div class="legendrow">
+        <span class="it"><span class="sw" style="background:var(--blue)"></span>detect?</span>
+        <span class="it"><span class="sw" style="background:var(--orange)"></span>control trial?</span>
+        <span class="it"><span class="sw" style="background:var(--teal)"></span>normal state?</span>
+      </div>
+      <div class="charts" style="max-width: 1100px; width: 100%; margin: 0 auto">
+        <div id="xm-gemma4" style="flex:1"></div>
+        <div id="xm-qwen" style="flex:1"></div>
+        <div id="xm-moe" style="flex:1"></div>
+        <div id="xm-glm" style="flex:1"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <p>It&rsquo;s important to realize the above graphic doesn&rsquo;t depend on the idea of a
+  concept set point. It&rsquo;s just raw data, and illustrates, at an
+  intuitive level, how the model response is a function mostly of the question itself (at low
+  &alpha;) and the injected concept irrespective of the question (at high &alpha;).</p>
+</div>
+
+<div class="wrap">
+  <h2>How I derive the concept set points</h2>
+  <p class="fn">Note: I don&rsquo;t have a background in statistics or data science. So
+  I&rsquo;d love feedback on this or suggestions on how to improve it.</p>
+  <p>The question baselines are straightforward to calculate. Just ask a model a question and
+  see what <i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i> is. But how do I calculate the
+  concept set points and the extent to which they influence the response at a certain
+  injection strength?</p>
+  <p>The informal answer is that I basically pick concept set points to maximize
+  predictive accuracy. This
+  isn&rsquo;t overfitting because one set point per concept must simultaneously fit all
+  three questions at all four injection strengths. Furthermore, as the next section shows,
+  values fit on two questions successfully predict the third.</p>
+  <p>More precisely (feel free to skip to the next section), I first measure each question
+  baseline with no injection. Then I
+  inject each concept at each strength and record the answers. I model each answer as a
+  function of two numbers: the question baseline and the concept set point. The weight
+  assigned to the question baseline is <i>k</i>, and the weight assigned to the concept
+  set point is 1&thinsp;&minus;&thinsp;<i>k</i>, with <i>k</i> depending only on the
+  injection strength. At each injection strength, I select the <i>k</i> value and the
+  strength-relative set points via least squares. I then calculate the final set
+  points per concept (the dots you see) by averaging the different strength-relative values,
+  weighted by (1&thinsp;&minus;&thinsp;<i>k</i>)&sup2;.</p>
+</div>
+<div class="wide">
+  <div class="eq"><i>answer</i>(<i>q</i>, <i>c</i>, <i>&alpha;</i>) &nbsp;&asymp;&nbsp;
+    <i>k</i><sub>&alpha;</sub> &middot; <i>baseline</i>(<i>q</i>)
+    &nbsp;+&nbsp; (1 &minus; <i>k</i><sub>&alpha;</sub>) &middot; <i>setpoint</i>(<i>c</i>)</div>
+  <div class="eqnote">
+    <div><b><i>baseline</i>(<i>q</i>)</b> = the question&rsquo;s margin with no
+    injection</div>
+    <div><b><i>k</i><sub>&alpha;</sub></b> = the fraction of the question&rsquo;s influence
+    that applies at strength &alpha;</div>
+    <div><b><i>setpoint</i>(<i>c</i>)</b> = one number per concept (the dots)</div>
+  </div>
+</div>
+
+<div class="wide">
+</div>
+
+<div class="wrap">
+  <h2>How much does this account explain?</h2>
+  <p>How successful is this account at predicting the observed model
+  responses? To answer this question, I adopt the above approach on two out of the three
+  questions, and then evaluate predictive success on the held-out question. I do this for
+  each question in turn, pool the squared errors, and
+  then calculate R&sup2;.</p>
+  <p>Note that the held-out question&rsquo;s baseline is measured, not predicted. At low
+  injection strength, the bars therefore mostly reflect this baseline: a question-only null
+  model (gray bars below) scores highly there and my predictive model involving concept set
+  points doesn&rsquo;t add much. At higher injection strengths, however, the question
+  baseline&rsquo;s relevance wanes, and the concept set points do an increasingly large
+  proportion of the predictive work. Note that the gap between gray (question-only null) and
+  blue (full account) increases as injection strength increases.</p>
+</div>
+
+<div class="wide">
+  <div id="r2chart" style="max-width:1000px; margin-top: 30px"></div>
+</div>
+
+<div class="wrap">
+  <p>At this point it&rsquo;s natural to ask how much the account generalizes across
+  different <em>questions</em>. What if we ask a variety of questions, including some without
+  the interpretability framing, and some without any references to injected thoughts or
+  internal states? With these questions, how much would be explained by the question baseline
+  + concept set points?</p>
+  <p>Preliminary results suggest my account generalizes across questions surprisingly well.
+  I&rsquo;ve looked at introspection prompt variants from
+  <a href="https://github.com/safety-research/introspection-mechanisms">&ldquo;Mechanisms of
+  Introspective Awareness&rdquo;</a> as well as 20 questions unrelated to introspection
+  contained in the original Anthropic paper to control for Yes bias. With all of these
+  questions, model response under injection is largely explained by question baseline +
+  concept set points.</p>
+</div>
+
+<div class="wrap">
+  <h2>Maybe Claude is different?</h2>
+  <p>An obvious worry is that I did these experiments on open-source models, not Claude.
+  Maybe Claude is different? The only way to know for sure is to have Anthropic run these
+  experiments on Claude.</p>
+  <p>In the meantime, there are at least two reasons to be skeptical that Claude is different
+  here.</p>
+  <p>The first is that GLM-5.2 shows the same pattern as the smaller open-source models.
+  GLM-5.2 is highly capable, plausibly at least as capable as Claude Opus 4.1 (the most
+  capable model in the original Anthropic paper). This makes it less likely that Claude models
+  behave uniquely here because of a capability difference.</p>
+  <p>The second reason to be skeptical that Claude is special here is that you rarely see
+  model capabilities that are completely absent in only moderately less capable models.</p>
+  <h2>Conclusion</h2>
+  <p>I&rsquo;ve shown that there are problems with the story Anthropic tells about the
+  detection of injected thoughts. I&rsquo;ve also developed my own non-introspective
+  explanation of the observed data. This doesn&rsquo;t bode well for the claim that LLMs are
+  introspectively aware. This in turn weakens the case that LLMs have access consciousness,
+  which ultimately weakens the case that they have phenomenal consciousness.</p>
+  <footer></footer>
+</div>
+
+<script>
+const DATA = {"ctl": {"detect": -15.17, "control": -2.67, "normal": 8.19}, "order": ["Peace", "Secrecy", "Memories", "Sadness", "Masquerades", "Happiness", "Illusions", "Monoliths", "Fountains", "Quarries", "Dust", "Frosts", "Youths", "Treasures", "Boulders", "Contraptions", "Harmonies", "Avalanches", "Sugar", "Kaleidoscopes", "Trumpets", "Poetry", "Rubber", "Dirigibles", "Bags", "Xylophones", "Silver", "Mirrors", "Lightning", "Algorithms", "Snow", "Amphitheaters", "Denim", "Satellites", "Plastic", "Deserts", "Constellations", "Caverns", "Volcanoes", "Aquariums", "Cameras", "Dynasties", "Blood", "Milk", "Phones", "Bread", "Oceans", "Trees", "Origami", "Vegetables"], "A": {"Algorithms": 2.12, "Amphitheaters": 3.19, "Aquariums": 8.26, "Avalanches": -2.22, "Bags": -0.12, "Blood": 8.82, "Boulders": -5.49, "Bread": 11.16, "Cameras": 8.35, "Caverns": 7.93, "Constellations": 7.67, "Contraptions": -5.36, "Denim": 4.93, "Deserts": 6.85, "Dirigibles": -0.61, "Dust": -6.7, "Dynasties": 8.35, "Fountains": -7.44, "Frosts": -6.02, "Happiness": -10.54, "Harmonies": -3.13, "Illusions": -9.23, "Kaleidoscopes": -1.39, "Lightning": 1.63, "Masquerades": -12.86, "Memories": -13.56, "Milk": 8.98, "Mirrors": 1.61, "Monoliths": -7.62, "Oceans": 13.85, "Origami": 15.63, "Peace": -20.01, "Phones": 11.13, "Plastic": 5.52, "Poetry": -0.96, "Quarries": -7.02, "Rubber": -0.79, "Sadness": -13.03, "Satellites": 5.32, "Secrecy": -13.98, "Silver": 1.59, "Snow": 2.47, "Sugar": -1.53, "Treasures": -5.53, "Trees": 15.58, "Trumpets": -1.11, "Vegetables": 23.79, "Volcanoes": 8.1, "Xylophones": 1.15, "Youths": -5.82}, "range": [-22.8, 27.8], "inj": {"a1": {"detect": {"Algorithms": -15.44, "Amphitheaters": -14.56, "Aquariums": -14.92, "Avalanches": -13.4, "Bags": -16.92, "Blood": -11.79, "Boulders": -13.62, "Bread": -14.19, "Cameras": -15.21, "Caverns": -13.27, "Constellations": -14.73, "Contraptions": -15.29, "Denim": -13.15, "Deserts": -13.17, "Dirigibles": -13.35, "Dust": -13.71, "Dynasties": -14.9, "Fountains": -15.9, "Frosts": -11.05, "Happiness": -15.46, "Harmonies": -9.14, "Illusions": -14.56, "Kaleidoscopes": -13.71, "Lightning": -12.25, "Masquerades": -15.33, "Memories": -13.59, "Milk": -14.02, "Mirrors": -16.0, "Monoliths": -13.91, "Oceans": -11.46, "Origami": -13.1, "Peace": -15.84, "Phones": -15.5, "Plastic": -14.19, "Poetry": -14.46, "Quarries": -15.92, "Rubber": -15.23, "Sadness": -15.09, "Satellites": -14.88, "Secrecy": -15.67, "Silver": -14.27, "Snow": -13.1, "Sugar": -13.42, "Treasures": -11.12, "Trees": -12.48, "Trumpets": -13.12, "Vegetables": -12.38, "Volcanoes": -11.38, "Xylophones": -13.1, "Youths": -15.99}, "control": {"Algorithms": 3.19, "Amphitheaters": 0.88, "Aquariums": -0.38, "Avalanches": -1.08, "Bags": -2.69, "Blood": 3.33, "Boulders": -2.19, "Bread": -0.5, "Cameras": 3.06, "Caverns": -0.17, "Constellations": 0.46, "Contraptions": -3.15, "Denim": -3.12, "Deserts": 2.33, "Dirigibles": 0.42, "Dust": -4.94, "Dynasties": 3.6, "Fountains": -4.42, "Frosts": -3.0, "Happiness": -6.35, "Harmonies": -0.79, "Illusions": -0.62, "Kaleidoscopes": -3.17, "Lightning": -0.12, "Masquerades": -5.17, "Memories": -4.88, "Milk": -2.46, "Mirrors": -4.21, "Monoliths": -2.9, "Oceans": 4.69, "Origami": 0.96, "Peace": -4.5, "Phones": 1.85, "Plastic": 0.75, "Poetry": -0.77, "Quarries": -1.92, "Rubber": -3.79, "Sadness": -5.73, "Satellites": 1.46, "Secrecy": -4.42, "Silver": -4.79, "Snow": -2.33, "Sugar": -3.04, "Treasures": -3.54, "Trees": 3.77, "Trumpets": -1.54, "Vegetables": 4.1, "Volcanoes": 4.33, "Xylophones": -2.12, "Youths": -1.1}, "normal": {"Algorithms": 12.96, "Amphitheaters": 9.75, "Aquariums": 11.92, "Avalanches": 8.54, "Bags": 6.81, "Blood": 12.04, "Boulders": 5.23, "Bread": 10.67, "Cameras": 13.25, "Caverns": 9.27, "Constellations": 10.5, "Contraptions": 2.44, "Denim": 6.54, "Deserts": 9.75, "Dirigibles": 7.17, "Dust": -0.1, "Dynasties": 12.1, "Fountains": 9.19, "Frosts": 0.27, "Happiness": 3.25, "Harmonies": 3.85, "Illusions": 6.31, "Kaleidoscopes": 8.33, "Lightning": 7.1, "Masquerades": 3.6, "Memories": 1.29, "Milk": 10.38, "Mirrors": 10.54, "Monoliths": 2.15, "Oceans": 10.67, "Origami": 11.48, "Peace": 3.76, "Phones": 12.42, "Plastic": 8.69, "Poetry": 9.81, "Quarries": 10.52, "Rubber": 8.31, "Sadness": 3.58, "Satellites": 12.95, "Secrecy": 4.42, "Silver": 8.12, "Snow": 7.12, "Sugar": 4.67, "Treasures": -1.19, "Trees": 12.2, "Trumpets": 9.9, "Vegetables": 13.02, "Volcanoes": 11.99, "Xylophones": 8.67, "Youths": 6.31}}, "a2": {"detect": {"Algorithms": -14.31, "Amphitheaters": -13.15, "Aquariums": -12.65, "Avalanches": -9.94, "Bags": -16.77, "Blood": -5.04, "Boulders": -11.88, "Bread": -11.44, "Cameras": -11.44, "Caverns": -10.96, "Constellations": -13.31, "Contraptions": -8.69, "Denim": -9.92, "Deserts": -10.83, "Dirigibles": -11.0, "Dust": -9.18, "Dynasties": -11.35, "Fountains": -16.03, "Frosts": -8.55, "Happiness": -14.84, "Harmonies": -5.87, "Illusions": -12.21, "Kaleidoscopes": -11.29, "Lightning": -6.54, "Masquerades": -15.88, "Memories": -11.54, "Milk": -12.79, "Mirrors": -15.77, "Monoliths": -5.84, "Oceans": -4.96, "Origami": -9.98, "Peace": -17.11, "Phones": -14.04, "Plastic": -9.75, "Poetry": -12.75, "Quarries": -15.67, "Rubber": -14.6, "Sadness": -14.47, "Satellites": -12.98, "Secrecy": -15.24, "Silver": -12.92, "Snow": -9.06, "Sugar": -10.31, "Treasures": -7.67, "Trees": -6.42, "Trumpets": -9.98, "Vegetables": -8.0, "Volcanoes": -5.67, "Xylophones": -10.69, "Youths": -10.7}, "control": {"Algorithms": 4.35, "Amphitheaters": 3.46, "Aquariums": 1.96, "Avalanches": 0.71, "Bags": -1.52, "Blood": 10.69, "Boulders": -1.58, "Bread": 2.42, "Cameras": 8.6, "Caverns": 2.25, "Constellations": 3.71, "Contraptions": -4.06, "Denim": -2.17, "Deserts": 3.96, "Dirigibles": 2.96, "Dust": -3.68, "Dynasties": 8.94, "Fountains": -5.77, "Frosts": -3.8, "Happiness": -9.08, "Harmonies": -1.69, "Illusions": 1.88, "Kaleidoscopes": -3.29, "Lightning": 5.96, "Masquerades": -5.94, "Memories": -6.15, "Milk": -1.67, "Mirrors": -5.42, "Monoliths": -1.81, "Oceans": 9.38, "Origami": 5.71, "Peace": -9.81, "Phones": 7.23, "Plastic": 4.67, "Poetry": -1.21, "Quarries": -1.33, "Rubber": -4.75, "Sadness": -9.21, "Satellites": 3.88, "Secrecy": -5.05, "Silver": -5.62, "Snow": -0.46, "Sugar": -1.96, "Treasures": -4.14, "Trees": 10.06, "Trumpets": -0.12, "Vegetables": 7.56, "Volcanoes": 7.46, "Xylophones": -2.42, "Youths": -0.46}, "normal": {"Algorithms": 13.9, "Amphitheaters": 9.79, "Aquariums": 13.28, "Avalanches": 8.44, "Bags": 4.27, "Blood": 15.61, "Boulders": 4.33, "Bread": 11.5, "Cameras": 15.04, "Caverns": 9.88, "Constellations": 11.25, "Contraptions": -2.44, "Denim": 5.94, "Deserts": 8.62, "Dirigibles": 6.79, "Dust": -2.88, "Dynasties": 14.69, "Fountains": 9.33, "Frosts": -2.08, "Happiness": -6.23, "Harmonies": 0.52, "Illusions": 5.02, "Kaleidoscopes": 8.15, "Lightning": 8.04, "Masquerades": -0.17, "Memories": -5.46, "Milk": 11.54, "Mirrors": 11.65, "Monoliths": -0.44, "Oceans": 11.92, "Origami": 13.23, "Peace": -6.06, "Phones": 15.03, "Plastic": 8.58, "Poetry": 7.88, "Quarries": 11.41, "Rubber": 7.85, "Sadness": -4.56, "Satellites": 14.44, "Secrecy": 0.31, "Silver": 7.1, "Snow": 7.85, "Sugar": 2.12, "Treasures": -3.1, "Trees": 14.33, "Trumpets": 9.79, "Vegetables": 15.98, "Volcanoes": 13.79, "Xylophones": 7.0, "Youths": 3.79}}, "a4": {"detect": {"Algorithms": -1.12, "Amphitheaters": -7.08, "Aquariums": -4.08, "Avalanches": -4.67, "Bags": -6.14, "Blood": 6.56, "Boulders": -10.58, "Bread": 1.21, "Cameras": 4.77, "Caverns": -5.46, "Constellations": -3.38, "Contraptions": -6.88, "Denim": -2.46, "Deserts": -7.21, "Dirigibles": -5.48, "Dust": -6.44, "Dynasties": 0.88, "Fountains": -14.67, "Frosts": -6.9, "Happiness": -9.17, "Harmonies": -4.87, "Illusions": -6.4, "Kaleidoscopes": -4.88, "Lightning": 1.21, "Masquerades": -12.03, "Memories": -10.36, "Milk": -5.75, "Mirrors": -10.73, "Monoliths": -6.2, "Oceans": 7.0, "Origami": 4.79, "Peace": -16.2, "Phones": 0.92, "Plastic": 1.62, "Poetry": -8.5, "Quarries": -13.02, "Rubber": -12.98, "Sadness": -14.97, "Satellites": -5.92, "Secrecy": -14.4, "Silver": -2.56, "Snow": -0.88, "Sugar": -1.66, "Treasures": -6.42, "Trees": 6.62, "Trumpets": -4.38, "Vegetables": 4.79, "Volcanoes": 9.1, "Xylophones": -4.83, "Youths": -5.0}, "control": {"Algorithms": 6.38, "Amphitheaters": 5.19, "Aquariums": 5.35, "Avalanches": -2.0, "Bags": -0.6, "Blood": 11.42, "Boulders": -3.81, "Bread": 5.33, "Cameras": 10.01, "Caverns": 4.83, "Constellations": 11.35, "Contraptions": -4.75, "Denim": 4.71, "Deserts": 4.62, "Dirigibles": 3.67, "Dust": -3.85, "Dynasties": 11.12, "Fountains": -6.4, "Frosts": -4.65, "Happiness": -5.42, "Harmonies": -3.12, "Illusions": -1.69, "Kaleidoscopes": -0.48, "Lightning": 3.46, "Masquerades": -7.39, "Memories": -9.5, "Milk": 3.27, "Mirrors": -4.83, "Monoliths": -5.37, "Oceans": 15.21, "Origami": 11.79, "Peace": -12.17, "Phones": 11.54, "Plastic": 8.69, "Poetry": -2.31, "Quarries": -2.54, "Rubber": -4.33, "Sadness": -12.84, "Satellites": 6.4, "Secrecy": -8.52, "Silver": -1.75, "Snow": 0.83, "Sugar": -2.67, "Treasures": -4.02, "Trees": 15.96, "Trumpets": 0.25, "Vegetables": 8.58, "Volcanoes": 11.23, "Xylophones": 1.25, "Youths": -0.17}, "normal": {"Algorithms": 7.85, "Amphitheaters": 8.73, "Aquariums": 14.27, "Avalanches": 1.79, "Bags": 1.1, "Blood": 13.89, "Boulders": -1.73, "Bread": 11.6, "Cameras": 18.1, "Caverns": 10.56, "Constellations": 11.83, "Contraptions": -3.62, "Denim": 8.67, "Deserts": 6.71, "Dirigibles": 4.5, "Dust": -3.91, "Dynasties": 15.32, "Fountains": 6.23, "Frosts": -3.98, "Happiness": -5.39, "Harmonies": -1.75, "Illusions": 0.33, "Kaleidoscopes": 1.83, "Lightning": 3.79, "Masquerades": -4.9, "Memories": -9.35, "Milk": 13.48, "Mirrors": 9.67, "Monoliths": -5.06, "Oceans": 13.67, "Origami": 13.21, "Peace": -12.08, "Phones": 16.67, "Plastic": 9.69, "Poetry": -0.31, "Quarries": 9.17, "Rubber": 5.33, "Sadness": -11.55, "Satellites": 10.9, "Secrecy": -7.31, "Silver": 0.29, "Snow": 5.92, "Sugar": -1.48, "Treasures": -3.96, "Trees": 18.96, "Trumpets": 5.5, "Vegetables": 17.81, "Volcanoes": 14.02, "Xylophones": 5.04, "Youths": 1.85}}, "a8": {"detect": {"Algorithms": -4.09, "Amphitheaters": -2.07, "Aquariums": 4.47, "Avalanches": -1.25, "Bags": -1.81, "Blood": -0.69, "Boulders": -6.81, "Bread": 8.43, "Cameras": -0.81, "Caverns": 2.46, "Constellations": 1.41, "Contraptions": -5.71, "Denim": 1.45, "Deserts": 2.67, "Dirigibles": -4.73, "Dust": -6.9, "Dynasties": -1.67, "Fountains": -12.17, "Frosts": -5.75, "Happiness": -10.63, "Harmonies": -3.81, "Illusions": -11.58, "Kaleidoscopes": -3.38, "Lightning": 0.9, "Masquerades": -11.29, "Memories": -12.17, "Milk": 4.2, "Mirrors": 1.75, "Monoliths": -7.87, "Oceans": 6.11, "Origami": 8.27, "Peace": -17.58, "Phones": 2.58, "Plastic": -1.07, "Poetry": -3.56, "Quarries": -11.85, "Rubber": -3.08, "Sadness": -8.97, "Satellites": 0.71, "Secrecy": -13.05, "Silver": 1.54, "Snow": 0.98, "Sugar": -1.37, "Treasures": -5.77, "Trees": 3.6, "Trumpets": -5.03, "Vegetables": 18.47, "Volcanoes": -0.67, "Xylophones": -3.4, "Youths": -9.97}, "control": {"Algorithms": -2.15, "Amphitheaters": 2.53, "Aquariums": 4.17, "Avalanches": -5.44, "Bags": 1.58, "Blood": 0.98, "Boulders": -3.94, "Bread": 7.71, "Cameras": 0.89, "Caverns": 7.17, "Constellations": 4.1, "Contraptions": -3.92, "Denim": 3.21, "Deserts": 7.0, "Dirigibles": -2.69, "Dust": -5.68, "Dynasties": 2.12, "Fountains": -6.23, "Frosts": -4.95, "Happiness": -8.46, "Harmonies": -3.55, "Illusions": -12.8, "Kaleidoscopes": -1.88, "Lightning": -3.12, "Masquerades": -11.74, "Memories": -11.33, "Milk": 8.48, "Mirrors": 3.27, "Monoliths": -7.15, "Oceans": 7.05, "Origami": 12.05, "Peace": -16.16, "Phones": 4.67, "Plastic": 0.65, "Poetry": 0.6, "Quarries": -9.82, "Rubber": 1.88, "Sadness": -7.19, "Satellites": 1.75, "Secrecy": -11.95, "Silver": 3.1, "Snow": -0.73, "Sugar": -2.24, "Treasures": -3.97, "Trees": 8.12, "Trumpets": -3.84, "Vegetables": 21.02, "Volcanoes": -0.25, "Xylophones": 1.23, "Youths": -9.0}, "normal": {"Algorithms": -1.48, "Amphitheaters": 1.72, "Aquariums": 7.46, "Avalanches": -4.65, "Bags": 1.69, "Blood": 1.74, "Boulders": -3.73, "Bread": 10.0, "Cameras": 1.81, "Caverns": 9.38, "Constellations": 5.55, "Contraptions": -3.08, "Denim": 3.73, "Deserts": 8.62, "Dirigibles": -2.48, "Dust": -5.96, "Dynasties": 5.23, "Fountains": -4.0, "Frosts": -4.79, "Happiness": -7.41, "Harmonies": -2.76, "Illusions": -12.06, "Kaleidoscopes": -2.06, "Lightning": -4.79, "Masquerades": -12.05, "Memories": -10.75, "Milk": 11.03, "Mirrors": 2.29, "Monoliths": -7.74, "Oceans": 7.73, "Origami": 14.11, "Peace": -16.52, "Phones": 9.61, "Plastic": 2.23, "Poetry": 2.28, "Quarries": -6.79, "Rubber": 3.5, "Sadness": -7.71, "Satellites": 3.7, "Secrecy": -11.16, "Silver": 1.85, "Snow": 0.42, "Sugar": -1.59, "Treasures": -4.29, "Trees": 11.92, "Trumpets": -2.45, "Vegetables": 25.01, "Volcanoes": -0.31, "Xylophones": 1.53, "Youths": -6.06}}}};
+const XDATA = {"gemma4": {"ctl": {"detect": -15.17, "control": -2.67, "normal": 8.19}, "inj": {"a1": {"detect": {"Algorithms": -15.44, "Amphitheaters": -14.56, "Aquariums": -14.92, "Avalanches": -13.4, "Bags": -16.92, "Blood": -11.79, "Boulders": -13.62, "Bread": -14.19, "Cameras": -15.21, "Caverns": -13.27, "Constellations": -14.73, "Contraptions": -15.29, "Denim": -13.15, "Deserts": -13.17, "Dirigibles": -13.35, "Dust": -13.71, "Dynasties": -14.9, "Fountains": -15.9, "Frosts": -11.05, "Happiness": -15.46, "Harmonies": -9.14, "Illusions": -14.56, "Kaleidoscopes": -13.71, "Lightning": -12.25, "Masquerades": -15.33, "Memories": -13.59, "Milk": -14.02, "Mirrors": -16.0, "Monoliths": -13.91, "Oceans": -11.46, "Origami": -13.1, "Peace": -15.84, "Phones": -15.5, "Plastic": -14.19, "Poetry": -14.46, "Quarries": -15.92, "Rubber": -15.23, "Sadness": -15.09, "Satellites": -14.88, "Secrecy": -15.67, "Silver": -14.27, "Snow": -13.1, "Sugar": -13.42, "Treasures": -11.12, "Trees": -12.48, "Trumpets": -13.12, "Vegetables": -12.38, "Volcanoes": -11.38, "Xylophones": -13.1, "Youths": -15.99}, "control": {"Algorithms": 3.19, "Amphitheaters": 0.88, "Aquariums": -0.38, "Avalanches": -1.08, "Bags": -2.69, "Blood": 3.33, "Boulders": -2.19, "Bread": -0.5, "Cameras": 3.06, "Caverns": -0.17, "Constellations": 0.46, "Contraptions": -3.15, "Denim": -3.12, "Deserts": 2.33, "Dirigibles": 0.42, "Dust": -4.94, "Dynasties": 3.6, "Fountains": -4.42, "Frosts": -3.0, "Happiness": -6.35, "Harmonies": -0.79, "Illusions": -0.62, "Kaleidoscopes": -3.17, "Lightning": -0.12, "Masquerades": -5.17, "Memories": -4.88, "Milk": -2.46, "Mirrors": -4.21, "Monoliths": -2.9, "Oceans": 4.69, "Origami": 0.96, "Peace": -4.5, "Phones": 1.85, "Plastic": 0.75, "Poetry": -0.77, "Quarries": -1.92, "Rubber": -3.79, "Sadness": -5.73, "Satellites": 1.46, "Secrecy": -4.42, "Silver": -4.79, "Snow": -2.33, "Sugar": -3.04, "Treasures": -3.54, "Trees": 3.77, "Trumpets": -1.54, "Vegetables": 4.1, "Volcanoes": 4.33, "Xylophones": -2.12, "Youths": -1.1}, "normal": {"Algorithms": 12.96, "Amphitheaters": 9.75, "Aquariums": 11.92, "Avalanches": 8.54, "Bags": 6.81, "Blood": 12.04, "Boulders": 5.23, "Bread": 10.67, "Cameras": 13.25, "Caverns": 9.27, "Constellations": 10.5, "Contraptions": 2.44, "Denim": 6.54, "Deserts": 9.75, "Dirigibles": 7.17, "Dust": -0.1, "Dynasties": 12.1, "Fountains": 9.19, "Frosts": 0.27, "Happiness": 3.25, "Harmonies": 3.85, "Illusions": 6.31, "Kaleidoscopes": 8.33, "Lightning": 7.1, "Masquerades": 3.6, "Memories": 1.29, "Milk": 10.38, "Mirrors": 10.54, "Monoliths": 2.15, "Oceans": 10.67, "Origami": 11.48, "Peace": 3.76, "Phones": 12.42, "Plastic": 8.69, "Poetry": 9.81, "Quarries": 10.52, "Rubber": 8.31, "Sadness": 3.58, "Satellites": 12.95, "Secrecy": 4.42, "Silver": 8.12, "Snow": 7.12, "Sugar": 4.67, "Treasures": -1.19, "Trees": 12.2, "Trumpets": 9.9, "Vegetables": 13.02, "Volcanoes": 11.99, "Xylophones": 8.67, "Youths": 6.31}}, "a2": {"detect": {"Algorithms": -14.31, "Amphitheaters": -13.15, "Aquariums": -12.65, "Avalanches": -9.94, "Bags": -16.77, "Blood": -5.04, "Boulders": -11.88, "Bread": -11.44, "Cameras": -11.44, "Caverns": -10.96, "Constellations": -13.31, "Contraptions": -8.69, "Denim": -9.92, "Deserts": -10.83, "Dirigibles": -11.0, "Dust": -9.18, "Dynasties": -11.35, "Fountains": -16.03, "Frosts": -8.55, "Happiness": -14.84, "Harmonies": -5.87, "Illusions": -12.21, "Kaleidoscopes": -11.29, "Lightning": -6.54, "Masquerades": -15.88, "Memories": -11.54, "Milk": -12.79, "Mirrors": -15.77, "Monoliths": -5.84, "Oceans": -4.96, "Origami": -9.98, "Peace": -17.11, "Phones": -14.04, "Plastic": -9.75, "Poetry": -12.75, "Quarries": -15.67, "Rubber": -14.6, "Sadness": -14.47, "Satellites": -12.98, "Secrecy": -15.24, "Silver": -12.92, "Snow": -9.06, "Sugar": -10.31, "Treasures": -7.67, "Trees": -6.42, "Trumpets": -9.98, "Vegetables": -8.0, "Volcanoes": -5.67, "Xylophones": -10.69, "Youths": -10.7}, "control": {"Algorithms": 4.35, "Amphitheaters": 3.46, "Aquariums": 1.96, "Avalanches": 0.71, "Bags": -1.52, "Blood": 10.69, "Boulders": -1.58, "Bread": 2.42, "Cameras": 8.6, "Caverns": 2.25, "Constellations": 3.71, "Contraptions": -4.06, "Denim": -2.17, "Deserts": 3.96, "Dirigibles": 2.96, "Dust": -3.68, "Dynasties": 8.94, "Fountains": -5.77, "Frosts": -3.8, "Happiness": -9.08, "Harmonies": -1.69, "Illusions": 1.88, "Kaleidoscopes": -3.29, "Lightning": 5.96, "Masquerades": -5.94, "Memories": -6.15, "Milk": -1.67, "Mirrors": -5.42, "Monoliths": -1.81, "Oceans": 9.38, "Origami": 5.71, "Peace": -9.81, "Phones": 7.23, "Plastic": 4.67, "Poetry": -1.21, "Quarries": -1.33, "Rubber": -4.75, "Sadness": -9.21, "Satellites": 3.88, "Secrecy": -5.05, "Silver": -5.62, "Snow": -0.46, "Sugar": -1.96, "Treasures": -4.14, "Trees": 10.06, "Trumpets": -0.12, "Vegetables": 7.56, "Volcanoes": 7.46, "Xylophones": -2.42, "Youths": -0.46}, "normal": {"Algorithms": 13.9, "Amphitheaters": 9.79, "Aquariums": 13.28, "Avalanches": 8.44, "Bags": 4.27, "Blood": 15.61, "Boulders": 4.33, "Bread": 11.5, "Cameras": 15.04, "Caverns": 9.88, "Constellations": 11.25, "Contraptions": -2.44, "Denim": 5.94, "Deserts": 8.62, "Dirigibles": 6.79, "Dust": -2.88, "Dynasties": 14.69, "Fountains": 9.33, "Frosts": -2.08, "Happiness": -6.23, "Harmonies": 0.52, "Illusions": 5.02, "Kaleidoscopes": 8.15, "Lightning": 8.04, "Masquerades": -0.17, "Memories": -5.46, "Milk": 11.54, "Mirrors": 11.65, "Monoliths": -0.44, "Oceans": 11.92, "Origami": 13.23, "Peace": -6.06, "Phones": 15.03, "Plastic": 8.58, "Poetry": 7.88, "Quarries": 11.41, "Rubber": 7.85, "Sadness": -4.56, "Satellites": 14.44, "Secrecy": 0.31, "Silver": 7.1, "Snow": 7.85, "Sugar": 2.12, "Treasures": -3.1, "Trees": 14.33, "Trumpets": 9.79, "Vegetables": 15.98, "Volcanoes": 13.79, "Xylophones": 7.0, "Youths": 3.79}}, "a4": {"detect": {"Algorithms": -1.12, "Amphitheaters": -7.08, "Aquariums": -4.08, "Avalanches": -4.67, "Bags": -6.14, "Blood": 6.56, "Boulders": -10.58, "Bread": 1.21, "Cameras": 4.77, "Caverns": -5.46, "Constellations": -3.38, "Contraptions": -6.88, "Denim": -2.46, "Deserts": -7.21, "Dirigibles": -5.48, "Dust": -6.44, "Dynasties": 0.88, "Fountains": -14.67, "Frosts": -6.9, "Happiness": -9.17, "Harmonies": -4.87, "Illusions": -6.4, "Kaleidoscopes": -4.88, "Lightning": 1.21, "Masquerades": -12.03, "Memories": -10.36, "Milk": -5.75, "Mirrors": -10.73, "Monoliths": -6.2, "Oceans": 7.0, "Origami": 4.79, "Peace": -16.2, "Phones": 0.92, "Plastic": 1.62, "Poetry": -8.5, "Quarries": -13.02, "Rubber": -12.98, "Sadness": -14.97, "Satellites": -5.92, "Secrecy": -14.4, "Silver": -2.56, "Snow": -0.88, "Sugar": -1.66, "Treasures": -6.42, "Trees": 6.62, "Trumpets": -4.38, "Vegetables": 4.79, "Volcanoes": 9.1, "Xylophones": -4.83, "Youths": -5.0}, "control": {"Algorithms": 6.38, "Amphitheaters": 5.19, "Aquariums": 5.35, "Avalanches": -2.0, "Bags": -0.6, "Blood": 11.42, "Boulders": -3.81, "Bread": 5.33, "Cameras": 10.01, "Caverns": 4.83, "Constellations": 11.35, "Contraptions": -4.75, "Denim": 4.71, "Deserts": 4.62, "Dirigibles": 3.67, "Dust": -3.85, "Dynasties": 11.12, "Fountains": -6.4, "Frosts": -4.65, "Happiness": -5.42, "Harmonies": -3.12, "Illusions": -1.69, "Kaleidoscopes": -0.48, "Lightning": 3.46, "Masquerades": -7.39, "Memories": -9.5, "Milk": 3.27, "Mirrors": -4.83, "Monoliths": -5.37, "Oceans": 15.21, "Origami": 11.79, "Peace": -12.17, "Phones": 11.54, "Plastic": 8.69, "Poetry": -2.31, "Quarries": -2.54, "Rubber": -4.33, "Sadness": -12.84, "Satellites": 6.4, "Secrecy": -8.52, "Silver": -1.75, "Snow": 0.83, "Sugar": -2.67, "Treasures": -4.02, "Trees": 15.96, "Trumpets": 0.25, "Vegetables": 8.58, "Volcanoes": 11.23, "Xylophones": 1.25, "Youths": -0.17}, "normal": {"Algorithms": 7.85, "Amphitheaters": 8.73, "Aquariums": 14.27, "Avalanches": 1.79, "Bags": 1.1, "Blood": 13.89, "Boulders": -1.73, "Bread": 11.6, "Cameras": 18.1, "Caverns": 10.56, "Constellations": 11.83, "Contraptions": -3.62, "Denim": 8.67, "Deserts": 6.71, "Dirigibles": 4.5, "Dust": -3.91, "Dynasties": 15.32, "Fountains": 6.23, "Frosts": -3.98, "Happiness": -5.39, "Harmonies": -1.75, "Illusions": 0.33, "Kaleidoscopes": 1.83, "Lightning": 3.79, "Masquerades": -4.9, "Memories": -9.35, "Milk": 13.48, "Mirrors": 9.67, "Monoliths": -5.06, "Oceans": 13.67, "Origami": 13.21, "Peace": -12.08, "Phones": 16.67, "Plastic": 9.69, "Poetry": -0.31, "Quarries": 9.17, "Rubber": 5.33, "Sadness": -11.55, "Satellites": 10.9, "Secrecy": -7.31, "Silver": 0.29, "Snow": 5.92, "Sugar": -1.48, "Treasures": -3.96, "Trees": 18.96, "Trumpets": 5.5, "Vegetables": 17.81, "Volcanoes": 14.02, "Xylophones": 5.04, "Youths": 1.85}}, "a8": {"detect": {"Algorithms": -4.09, "Amphitheaters": -2.07, "Aquariums": 4.47, "Avalanches": -1.25, "Bags": -1.81, "Blood": -0.69, "Boulders": -6.81, "Bread": 8.43, "Cameras": -0.81, "Caverns": 2.46, "Constellations": 1.41, "Contraptions": -5.71, "Denim": 1.45, "Deserts": 2.67, "Dirigibles": -4.73, "Dust": -6.9, "Dynasties": -1.67, "Fountains": -12.17, "Frosts": -5.75, "Happiness": -10.63, "Harmonies": -3.81, "Illusions": -11.58, "Kaleidoscopes": -3.38, "Lightning": 0.9, "Masquerades": -11.29, "Memories": -12.17, "Milk": 4.2, "Mirrors": 1.75, "Monoliths": -7.87, "Oceans": 6.11, "Origami": 8.27, "Peace": -17.58, "Phones": 2.58, "Plastic": -1.07, "Poetry": -3.56, "Quarries": -11.85, "Rubber": -3.08, "Sadness": -8.97, "Satellites": 0.71, "Secrecy": -13.05, "Silver": 1.54, "Snow": 0.98, "Sugar": -1.37, "Treasures": -5.77, "Trees": 3.6, "Trumpets": -5.03, "Vegetables": 18.47, "Volcanoes": -0.67, "Xylophones": -3.4, "Youths": -9.97}, "control": {"Algorithms": -2.15, "Amphitheaters": 2.53, "Aquariums": 4.17, "Avalanches": -5.44, "Bags": 1.58, "Blood": 0.98, "Boulders": -3.94, "Bread": 7.71, "Cameras": 0.89, "Caverns": 7.17, "Constellations": 4.1, "Contraptions": -3.92, "Denim": 3.21, "Deserts": 7.0, "Dirigibles": -2.69, "Dust": -5.68, "Dynasties": 2.12, "Fountains": -6.23, "Frosts": -4.95, "Happiness": -8.46, "Harmonies": -3.55, "Illusions": -12.8, "Kaleidoscopes": -1.88, "Lightning": -3.12, "Masquerades": -11.74, "Memories": -11.33, "Milk": 8.48, "Mirrors": 3.27, "Monoliths": -7.15, "Oceans": 7.05, "Origami": 12.05, "Peace": -16.16, "Phones": 4.67, "Plastic": 0.65, "Poetry": 0.6, "Quarries": -9.82, "Rubber": 1.88, "Sadness": -7.19, "Satellites": 1.75, "Secrecy": -11.95, "Silver": 3.1, "Snow": -0.73, "Sugar": -2.24, "Treasures": -3.97, "Trees": 8.12, "Trumpets": -3.84, "Vegetables": 21.02, "Volcanoes": -0.25, "Xylophones": 1.23, "Youths": -9.0}, "normal": {"Algorithms": -1.48, "Amphitheaters": 1.72, "Aquariums": 7.46, "Avalanches": -4.65, "Bags": 1.69, "Blood": 1.74, "Boulders": -3.73, "Bread": 10.0, "Cameras": 1.81, "Caverns": 9.38, "Constellations": 5.55, "Contraptions": -3.08, "Denim": 3.73, "Deserts": 8.62, "Dirigibles": -2.48, "Dust": -5.96, "Dynasties": 5.23, "Fountains": -4.0, "Frosts": -4.79, "Happiness": -7.41, "Harmonies": -2.76, "Illusions": -12.06, "Kaleidoscopes": -2.06, "Lightning": -4.79, "Masquerades": -12.05, "Memories": -10.75, "Milk": 11.03, "Mirrors": 2.29, "Monoliths": -7.74, "Oceans": 7.73, "Origami": 14.11, "Peace": -16.52, "Phones": 9.61, "Plastic": 2.23, "Poetry": 2.28, "Quarries": -6.79, "Rubber": 3.5, "Sadness": -7.71, "Satellites": 3.7, "Secrecy": -11.16, "Silver": 1.85, "Snow": 0.42, "Sugar": -1.59, "Treasures": -4.29, "Trees": 11.92, "Trumpets": -2.45, "Vegetables": 25.01, "Volcanoes": -0.31, "Xylophones": 1.53, "Youths": -6.06}}}, "label": "Gemma 4 \u00b7 31B \u00b7 L36/60", "order": ["Peace", "Secrecy", "Memories", "Sadness", "Masquerades", "Happiness", "Illusions", "Monoliths", "Fountains", "Quarries", "Dust", "Frosts", "Youths", "Treasures", "Boulders", "Contraptions", "Harmonies", "Avalanches", "Sugar", "Kaleidoscopes", "Trumpets", "Poetry", "Rubber", "Dirigibles", "Bags", "Xylophones", "Silver", "Mirrors", "Lightning", "Algorithms", "Snow", "Amphitheaters", "Denim", "Satellites", "Plastic", "Deserts", "Constellations", "Caverns", "Volcanoes", "Aquariums", "Cameras", "Dynasties", "Blood", "Milk", "Phones", "Bread", "Oceans", "Trees", "Origami", "Vegetables"], "range": [-20.6, 32.2]}, "qwen": {"ctl": {"detect": -5.83, "control": -1.25, "normal": 1.96}, "inj": {"a1": {"detect": {"Algorithms": -5.46, "Amphitheaters": -5.83, "Aquariums": -5.29, "Avalanches": -4.71, "Bags": -5.5, "Blood": -5.83, "Boulders": -5.58, "Bread": -6.04, "Cameras": -5.38, "Caverns": -5.46, "Constellations": -5.5, "Contraptions": -5.38, "Denim": -5.88, "Deserts": -5.62, "Dirigibles": -5.04, "Dust": -5.21, "Dynasties": -5.08, "Fountains": -6.25, "Frosts": -5.21, "Happiness": -7.12, "Harmonies": -4.96, "Illusions": -5.67, "Kaleidoscopes": -5.88, "Lightning": -5.12, "Masquerades": -5.38, "Memories": -6.21, "Milk": -6.17, "Mirrors": -6.04, "Monoliths": -5.38, "Oceans": -5.79, "Origami": -5.79, "Peace": -6.71, "Phones": -5.42, "Plastic": -5.67, "Poetry": -5.88, "Quarries": -5.75, "Rubber": -5.71, "Sadness": -6.62, "Satellites": -5.5, "Secrecy": -6.46, "Silver": -5.83, "Snow": -5.33, "Sugar": -5.75, "Treasures": -5.33, "Trees": -6.0, "Trumpets": -5.96, "Vegetables": -6.0, "Volcanoes": -5.42, "Xylophones": -5.67, "Youths": -5.54}, "control": {"Algorithms": -0.58, "Amphitheaters": -1.38, "Aquariums": -0.83, "Avalanches": -0.88, "Bags": -1.33, "Blood": -0.71, "Boulders": -1.42, "Bread": -0.96, "Cameras": -0.83, "Caverns": -0.88, "Constellations": -1.38, "Contraptions": -1.71, "Denim": -1.33, "Deserts": -1.29, "Dirigibles": -0.67, "Dust": -0.96, "Dynasties": -1.54, "Fountains": -1.46, "Frosts": -1.17, "Happiness": -3.29, "Harmonies": -1.29, "Illusions": -1.67, "Kaleidoscopes": -1.42, "Lightning": -0.5, "Masquerades": -1.46, "Memories": -2.25, "Milk": -1.38, "Mirrors": -1.33, "Monoliths": -1.38, "Oceans": -0.75, "Origami": -0.92, "Peace": -2.04, "Phones": -0.75, "Plastic": -1.17, "Poetry": -2.0, "Quarries": -1.25, "Rubber": -1.0, "Sadness": -2.54, "Satellites": -0.71, "Secrecy": -2.58, "Silver": -0.46, "Snow": -0.33, "Sugar": -1.12, "Treasures": -1.33, "Trees": -0.71, "Trumpets": -1.21, "Vegetables": -1.25, "Volcanoes": -1.0, "Xylophones": -0.83, "Youths": -1.46}, "normal": {"Algorithms": 2.96, "Amphitheaters": 1.67, "Aquariums": 1.96, "Avalanches": 1.0, "Bags": 1.96, "Blood": 2.0, "Boulders": 1.38, "Bread": 2.75, "Cameras": 2.96, "Caverns": 2.04, "Constellations": 1.38, "Contraptions": 1.17, "Denim": 2.04, "Deserts": 1.79, "Dirigibles": 0.96, "Dust": 1.83, "Dynasties": 1.38, "Fountains": 2.21, "Frosts": 1.42, "Happiness": 0.79, "Harmonies": 1.12, "Illusions": 1.42, "Kaleidoscopes": 1.25, "Lightning": 2.17, "Masquerades": 1.33, "Memories": 1.33, "Milk": 1.92, "Mirrors": 1.79, "Monoliths": 1.29, "Oceans": 2.25, "Origami": 2.33, "Peace": 1.33, "Phones": 2.83, "Plastic": 1.62, "Poetry": 2.42, "Quarries": 1.79, "Rubber": 2.04, "Sadness": 1.46, "Satellites": 2.5, "Secrecy": 0.42, "Silver": 2.62, "Snow": 2.75, "Sugar": 1.62, "Treasures": 1.33, "Trees": 3.04, "Trumpets": 2.08, "Vegetables": 2.67, "Volcanoes": 2.33, "Xylophones": 1.83, "Youths": 1.67}}, "a2": {"detect": {"Algorithms": -3.96, "Amphitheaters": -5.67, "Aquariums": -4.08, "Avalanches": -3.04, "Bags": -4.79, "Blood": -5.54, "Boulders": -4.96, "Bread": -5.83, "Cameras": -4.25, "Caverns": -5.0, "Constellations": -5.25, "Contraptions": -4.79, "Denim": -5.33, "Deserts": -5.38, "Dirigibles": -3.71, "Dust": -4.29, "Dynasties": -3.92, "Fountains": -6.42, "Frosts": -4.04, "Happiness": -8.19, "Harmonies": -3.71, "Illusions": -5.12, "Kaleidoscopes": -5.83, "Lightning": -3.67, "Masquerades": -4.62, "Memories": -7.58, "Milk": -6.04, "Mirrors": -6.33, "Monoliths": -4.88, "Oceans": -5.12, "Origami": -5.54, "Peace": -7.58, "Phones": -3.83, "Plastic": -4.46, "Poetry": -6.29, "Quarries": -5.46, "Rubber": -4.92, "Sadness": -7.42, "Satellites": -4.62, "Secrecy": -7.33, "Silver": -5.29, "Snow": -4.42, "Sugar": -5.29, "Treasures": -3.58, "Trees": -5.92, "Trumpets": -5.71, "Vegetables": -5.75, "Volcanoes": -5.58, "Xylophones": -4.54, "Youths": -5.58}, "control": {"Algorithms": 1.17, "Amphitheaters": -1.25, "Aquariums": 0.21, "Avalanches": -0.46, "Bags": -0.71, "Blood": 0.08, "Boulders": -0.75, "Bread": 0.12, "Cameras": 0.25, "Caverns": -0.42, "Constellations": -1.62, "Contraptions": -1.88, "Denim": -0.46, "Deserts": -1.04, "Dirigibles": 0.0, "Dust": -0.58, "Dynasties": -1.54, "Fountains": -1.62, "Frosts": -0.5, "Happiness": -4.67, "Harmonies": -0.83, "Illusions": -2.04, "Kaleidoscopes": -1.5, "Lightning": 0.38, "Masquerades": -1.75, "Memories": -4.0, "Milk": -1.08, "Mirrors": -1.46, "Monoliths": -1.33, "Oceans": 0.33, "Origami": -0.12, "Peace": -2.38, "Phones": 0.5, "Plastic": -0.33, "Poetry": -3.17, "Quarries": -0.92, "Rubber": -0.04, "Sadness": -3.92, "Satellites": 0.5, "Secrecy": -4.12, "Silver": 0.75, "Snow": 1.25, "Sugar": -0.67, "Treasures": -0.04, "Trees": 1.08, "Trumpets": -0.79, "Vegetables": -0.29, "Volcanoes": -0.75, "Xylophones": -0.21, "Youths": -0.83}, "normal": {"Algorithms": 5.5, "Amphitheaters": 1.21, "Aquariums": 2.04, "Avalanches": 0.58, "Bags": 1.54, "Blood": 2.33, "Boulders": 0.96, "Bread": 3.67, "Cameras": 3.75, "Caverns": 1.96, "Constellations": 0.25, "Contraptions": 0.12, "Denim": 2.42, "Deserts": 1.17, "Dirigibles": 0.33, "Dust": 1.58, "Dynasties": 0.42, "Fountains": 2.21, "Frosts": 1.38, "Happiness": -0.58, "Harmonies": 0.5, "Illusions": 0.54, "Kaleidoscopes": 0.42, "Lightning": 2.29, "Masquerades": 0.42, "Memories": -0.08, "Milk": 1.62, "Mirrors": 1.21, "Monoliths": 0.46, "Oceans": 2.96, "Origami": 2.92, "Peace": 1.25, "Phones": 3.75, "Plastic": 1.71, "Poetry": 1.83, "Quarries": 1.71, "Rubber": 2.33, "Sadness": 1.0, "Satellites": 3.42, "Secrecy": -1.62, "Silver": 3.25, "Snow": 3.42, "Sugar": 1.5, "Treasures": 1.17, "Trees": 5.25, "Trumpets": 2.04, "Vegetables": 4.04, "Volcanoes": 2.21, "Xylophones": 1.46, "Youths": 1.67}}, "a4": {"detect": {"Algorithms": 2.04, "Amphitheaters": -3.71, "Aquariums": 5.38, "Avalanches": -1.38, "Bags": 1.12, "Blood": -3.21, "Boulders": -3.08, "Bread": -3.0, "Cameras": 8.17, "Caverns": -2.83, "Constellations": -1.83, "Contraptions": -2.75, "Denim": -1.5, "Deserts": -1.38, "Dirigibles": -3.71, "Dust": -2.21, "Dynasties": -3.25, "Fountains": -6.25, "Frosts": 0.12, "Happiness": -2.52, "Harmonies": -1.92, "Illusions": -5.17, "Kaleidoscopes": -4.71, "Lightning": 1.38, "Masquerades": -3.83, "Memories": -5.81, "Milk": -3.58, "Mirrors": -5.04, "Monoliths": -3.62, "Oceans": 0.25, "Origami": -4.25, "Peace": -6.42, "Phones": 9.21, "Plastic": 4.88, "Poetry": -4.83, "Quarries": -2.17, "Rubber": 0.17, "Sadness": -5.85, "Satellites": 5.29, "Secrecy": -5.31, "Silver": -0.33, "Snow": 1.25, "Sugar": -1.25, "Treasures": -0.25, "Trees": -1.08, "Trumpets": -3.33, "Vegetables": -1.25, "Volcanoes": 1.96, "Xylophones": -2.21, "Youths": -2.81}, "control": {"Algorithms": 2.02, "Amphitheaters": -0.83, "Aquariums": 5.71, "Avalanches": -0.96, "Bags": 3.9, "Blood": 0.42, "Boulders": 2.42, "Bread": 2.92, "Cameras": 7.5, "Caverns": 0.71, "Constellations": 1.17, "Contraptions": -1.08, "Denim": 2.71, "Deserts": 0.08, "Dirigibles": -1.46, "Dust": 0.46, "Dynasties": -1.88, "Fountains": -1.12, "Frosts": 1.12, "Happiness": -2.52, "Harmonies": -0.67, "Illusions": -3.12, "Kaleidoscopes": -0.92, "Lightning": 2.33, "Masquerades": -2.46, "Memories": -3.88, "Milk": -0.62, "Mirrors": -0.67, "Monoliths": -1.08, "Oceans": 6.71, "Origami": 0.5, "Peace": -2.04, "Phones": 6.52, "Plastic": 2.92, "Poetry": -4.12, "Quarries": 0.38, "Rubber": 2.67, "Sadness": -3.38, "Satellites": 8.29, "Secrecy": -3.08, "Silver": 2.12, "Snow": 3.54, "Sugar": 0.0, "Treasures": 0.79, "Trees": 7.92, "Trumpets": 0.71, "Vegetables": 3.94, "Volcanoes": 3.69, "Xylophones": 0.67, "Youths": 0.88}, "normal": {"Algorithms": 3.98, "Amphitheaters": 0.67, "Aquariums": 6.62, "Avalanches": -0.04, "Bags": 4.04, "Blood": 2.92, "Boulders": 2.42, "Bread": 5.83, "Cameras": 8.06, "Caverns": 2.04, "Constellations": 3.35, "Contraptions": -0.83, "Denim": 4.12, "Deserts": 1.46, "Dirigibles": -1.33, "Dust": 1.21, "Dynasties": -1.54, "Fountains": 2.25, "Frosts": 1.58, "Happiness": 0.17, "Harmonies": -0.54, "Illusions": -3.0, "Kaleidoscopes": -0.21, "Lightning": 3.33, "Masquerades": -1.71, "Memories": -2.58, "Milk": 0.88, "Mirrors": 0.08, "Monoliths": -0.79, "Oceans": 9.21, "Origami": 6.46, "Peace": -0.38, "Phones": 7.27, "Plastic": 3.79, "Poetry": -3.38, "Quarries": 1.92, "Rubber": 3.96, "Sadness": -1.25, "Satellites": 9.77, "Secrecy": -2.42, "Silver": 4.12, "Snow": 4.58, "Sugar": 1.38, "Treasures": 1.12, "Trees": 9.94, "Trumpets": 2.08, "Vegetables": 6.58, "Volcanoes": 4.98, "Xylophones": 1.25, "Youths": 1.5}}, "a8": {"detect": {"Algorithms": -0.04, "Amphitheaters": -5.03, "Aquariums": 4.56, "Avalanches": -3.68, "Bags": 1.19, "Blood": 0.79, "Boulders": 2.88, "Bread": 7.02, "Cameras": 4.51, "Caverns": 2.17, "Constellations": -0.65, "Contraptions": -0.67, "Denim": 4.77, "Deserts": -0.9, "Dirigibles": 0.69, "Dust": -0.19, "Dynasties": -2.31, "Fountains": 1.96, "Frosts": 0.15, "Happiness": -2.07, "Harmonies": -0.79, "Illusions": -6.83, "Kaleidoscopes": 0.29, "Lightning": 4.35, "Masquerades": -2.4, "Memories": -3.58, "Milk": -0.33, "Mirrors": 2.6, "Monoliths": -0.79, "Oceans": 4.57, "Origami": 1.25, "Peace": -2.92, "Phones": 3.65, "Plastic": 2.35, "Poetry": -2.71, "Quarries": -1.44, "Rubber": 4.88, "Sadness": -4.1, "Satellites": 5.64, "Secrecy": -4.48, "Silver": 0.54, "Snow": 1.83, "Sugar": 0.0, "Treasures": -1.46, "Trees": 8.23, "Trumpets": 0.92, "Vegetables": 3.46, "Volcanoes": 0.97, "Xylophones": 0.94, "Youths": -3.54}, "control": {"Algorithms": 0.19, "Amphitheaters": -4.24, "Aquariums": 4.46, "Avalanches": -2.49, "Bags": 1.04, "Blood": 2.17, "Boulders": 4.19, "Bread": 7.94, "Cameras": 4.16, "Caverns": 3.1, "Constellations": 0.19, "Contraptions": 0.33, "Denim": 5.94, "Deserts": 0.1, "Dirigibles": 1.46, "Dust": 0.35, "Dynasties": -1.48, "Fountains": 4.25, "Frosts": 0.46, "Happiness": -1.92, "Harmonies": -0.25, "Illusions": -6.04, "Kaleidoscopes": 1.23, "Lightning": 3.67, "Masquerades": -1.88, "Memories": -2.12, "Milk": 0.54, "Mirrors": 2.81, "Monoliths": 0.15, "Oceans": 6.59, "Origami": 1.9, "Peace": -1.83, "Phones": 3.35, "Plastic": 2.4, "Poetry": -2.5, "Quarries": -0.9, "Rubber": 5.67, "Sadness": -3.73, "Satellites": 5.14, "Secrecy": -3.71, "Silver": 2.21, "Snow": 2.38, "Sugar": 0.17, "Treasures": -0.77, "Trees": 9.33, "Trumpets": 2.62, "Vegetables": 3.17, "Volcanoes": 1.35, "Xylophones": 2.0, "Youths": -2.9}, "normal": {"Algorithms": -0.15, "Amphitheaters": -4.1, "Aquariums": 4.75, "Avalanches": -2.31, "Bags": 1.06, "Blood": 2.6, "Boulders": 4.17, "Bread": 8.88, "Cameras": 4.12, "Caverns": 4.02, "Constellations": 0.6, "Contraptions": 0.73, "Denim": 6.35, "Deserts": 0.9, "Dirigibles": 1.52, "Dust": 0.4, "Dynasties": -1.35, "Fountains": 5.04, "Frosts": 0.58, "Happiness": -1.54, "Harmonies": -0.04, "Illusions": -6.62, "Kaleidoscopes": 1.54, "Lightning": 4.77, "Masquerades": -1.71, "Memories": -1.46, "Milk": 1.31, "Mirrors": 2.77, "Monoliths": 0.52, "Oceans": 6.95, "Origami": 2.33, "Peace": -1.46, "Phones": 3.56, "Plastic": 1.92, "Poetry": -2.29, "Quarries": -0.46, "Rubber": 5.77, "Sadness": -3.15, "Satellites": 5.17, "Secrecy": -3.46, "Silver": 2.52, "Snow": 2.71, "Sugar": 0.42, "Treasures": -0.52, "Trees": 10.2, "Trumpets": 3.46, "Vegetables": 4.17, "Volcanoes": 1.54, "Xylophones": 2.62, "Youths": -2.62}}}, "label": "Qwen 3.6 \u00b7 27B \u00b7 L38/64", "order": ["Illusions", "Secrecy", "Sadness", "Amphitheaters", "Memories", "Poetry", "Peace", "Masquerades", "Avalanches", "Happiness", "Youths", "Dynasties", "Monoliths", "Harmonies", "Quarries", "Contraptions", "Treasures", "Kaleidoscopes", "Milk", "Deserts", "Dirigibles", "Dust", "Sugar", "Constellations", "Frosts", "Mirrors", "Algorithms", "Xylophones", "Blood", "Trumpets", "Origami", "Fountains", "Bags", "Silver", "Caverns", "Volcanoes", "Boulders", "Snow", "Plastic", "Vegetables", "Lightning", "Denim", "Rubber", "Aquariums", "Phones", "Cameras", "Bread", "Oceans", "Satellites", "Trees"], "range": [-9.8, 15.3]}, "moe": {"ctl": {"detect": -3.92, "control": 0.67, "normal": 3.04}, "inj": {"a1": {"detect": {"Algorithms": -3.79, "Amphitheaters": -3.75, "Aquariums": -2.5, "Avalanches": -3.5, "Bags": -4.25, "Blood": -3.67, "Boulders": -3.96, "Bread": -3.25, "Cameras": -3.62, "Caverns": -4.08, "Constellations": -3.75, "Contraptions": -4.75, "Denim": -3.25, "Deserts": -2.42, "Dirigibles": -2.67, "Dust": -4.5, "Dynasties": -5.62, "Fountains": -4.0, "Frosts": -4.42, "Happiness": -3.58, "Harmonies": -3.79, "Illusions": -4.04, "Kaleidoscopes": -3.71, "Lightning": -3.5, "Masquerades": -3.67, "Memories": -3.62, "Milk": -2.96, "Mirrors": -3.58, "Monoliths": -4.42, "Oceans": -3.21, "Origami": -3.54, "Peace": -3.46, "Phones": -3.33, "Plastic": -2.83, "Poetry": -2.54, "Quarries": -2.75, "Rubber": -3.29, "Sadness": -4.12, "Satellites": -3.83, "Secrecy": -4.71, "Silver": -3.21, "Snow": -4.0, "Sugar": -3.79, "Treasures": -4.58, "Trees": -3.12, "Trumpets": -3.0, "Vegetables": -3.29, "Volcanoes": -3.12, "Xylophones": -3.88, "Youths": -3.62}, "control": {"Algorithms": -0.08, "Amphitheaters": 0.33, "Aquariums": 1.25, "Avalanches": 0.12, "Bags": 0.67, "Blood": 0.08, "Boulders": 0.62, "Bread": 1.5, "Cameras": -0.25, "Caverns": 0.17, "Constellations": 0.21, "Contraptions": -0.08, "Denim": 0.92, "Deserts": 0.46, "Dirigibles": 0.75, "Dust": 0.17, "Dynasties": -1.38, "Fountains": 0.75, "Frosts": 0.29, "Happiness": -0.17, "Harmonies": 0.46, "Illusions": -0.33, "Kaleidoscopes": 0.04, "Lightning": -0.21, "Masquerades": 0.67, "Memories": 0.75, "Milk": 1.42, "Mirrors": 0.25, "Monoliths": -0.33, "Oceans": 0.79, "Origami": 0.96, "Peace": 0.88, "Phones": 0.46, "Plastic": 0.5, "Poetry": 0.5, "Quarries": 0.92, "Rubber": 0.42, "Sadness": 1.75, "Satellites": -0.17, "Secrecy": -0.38, "Silver": 0.67, "Snow": 0.92, "Sugar": 0.58, "Treasures": -0.08, "Trees": 1.42, "Trumpets": 0.58, "Vegetables": 1.54, "Volcanoes": 0.08, "Xylophones": -0.04, "Youths": 0.67}, "normal": {"Algorithms": 2.75, "Amphitheaters": 2.04, "Aquariums": 3.62, "Avalanches": 1.79, "Bags": 3.58, "Blood": 2.58, "Boulders": 2.83, "Bread": 4.29, "Cameras": 2.62, "Caverns": 1.92, "Constellations": 2.0, "Contraptions": 2.0, "Denim": 3.5, "Deserts": 2.71, "Dirigibles": 2.33, "Dust": 2.25, "Dynasties": 1.21, "Fountains": 3.12, "Frosts": 2.33, "Happiness": 3.12, "Harmonies": 2.58, "Illusions": 1.79, "Kaleidoscopes": 2.38, "Lightning": 2.42, "Masquerades": 1.92, "Memories": 3.58, "Milk": 3.79, "Mirrors": 2.62, "Monoliths": 1.0, "Oceans": 3.71, "Origami": 3.62, "Peace": 4.17, "Phones": 3.21, "Plastic": 2.83, "Poetry": 4.21, "Quarries": 2.54, "Rubber": 2.79, "Sadness": 3.92, "Satellites": 2.04, "Secrecy": 2.38, "Silver": 3.33, "Snow": 3.42, "Sugar": 2.96, "Treasures": 2.96, "Trees": 4.46, "Trumpets": 2.92, "Vegetables": 4.25, "Volcanoes": 2.92, "Xylophones": 2.04, "Youths": 3.67}}, "a2": {"detect": {"Algorithms": -2.25, "Amphitheaters": -2.79, "Aquariums": 0.21, "Avalanches": -2.21, "Bags": -2.42, "Blood": -3.29, "Boulders": -3.42, "Bread": -1.58, "Cameras": -1.79, "Caverns": -3.83, "Constellations": -3.17, "Contraptions": -5.08, "Denim": -1.29, "Deserts": -0.12, "Dirigibles": -1.12, "Dust": -4.08, "Dynasties": -5.83, "Fountains": -3.62, "Frosts": -5.04, "Happiness": -1.77, "Harmonies": -2.75, "Illusions": -2.58, "Kaleidoscopes": -3.21, "Lightning": -2.71, "Masquerades": -1.08, "Memories": -1.17, "Milk": -1.21, "Mirrors": -2.5, "Monoliths": -3.08, "Oceans": -1.25, "Origami": -2.67, "Peace": -2.5, "Phones": -0.29, "Plastic": -1.71, "Poetry": 0.83, "Quarries": -0.67, "Rubber": -2.79, "Sadness": -2.62, "Satellites": -3.83, "Secrecy": -4.92, "Silver": -2.5, "Snow": -3.5, "Sugar": -3.88, "Treasures": -4.71, "Trees": -0.38, "Trumpets": -1.92, "Vegetables": -0.42, "Volcanoes": -1.46, "Xylophones": -3.33, "Youths": -2.46}, "control": {"Algorithms": -0.42, "Amphitheaters": 0.08, "Aquariums": 2.33, "Avalanches": -0.25, "Bags": 1.71, "Blood": -1.04, "Boulders": 0.54, "Bread": 2.46, "Cameras": -0.54, "Caverns": -0.17, "Constellations": -0.54, "Contraptions": -0.12, "Denim": 1.17, "Deserts": 0.62, "Dirigibles": 0.71, "Dust": 0.04, "Dynasties": -2.38, "Fountains": 0.5, "Frosts": -0.12, "Happiness": -1.38, "Harmonies": 0.67, "Illusions": -0.92, "Kaleidoscopes": 0.08, "Lightning": -1.21, "Masquerades": 1.46, "Memories": 0.5, "Milk": 2.62, "Mirrors": 0.33, "Monoliths": 0.08, "Oceans": 0.92, "Origami": 1.17, "Peace": 0.21, "Phones": 1.12, "Plastic": 0.21, "Poetry": 1.12, "Quarries": 1.33, "Rubber": -0.12, "Sadness": 1.33, "Satellites": -1.71, "Secrecy": -1.38, "Silver": 0.71, "Snow": 0.92, "Sugar": 0.0, "Treasures": 0.04, "Trees": 2.96, "Trumpets": 0.88, "Vegetables": 2.92, "Volcanoes": -0.04, "Xylophones": -0.79, "Youths": 0.04}, "normal": {"Algorithms": 2.38, "Amphitheaters": 0.58, "Aquariums": 4.17, "Avalanches": 0.0, "Bags": 4.54, "Blood": 1.42, "Boulders": 2.29, "Bread": 6.58, "Cameras": 2.42, "Caverns": 0.79, "Constellations": 0.75, "Contraptions": 0.92, "Denim": 3.71, "Deserts": 2.33, "Dirigibles": 1.46, "Dust": 1.67, "Dynasties": -0.96, "Fountains": 2.88, "Frosts": 0.75, "Happiness": -0.38, "Harmonies": 2.29, "Illusions": 0.54, "Kaleidoscopes": 1.46, "Lightning": 1.5, "Masquerades": 1.67, "Memories": 3.42, "Milk": 5.25, "Mirrors": 2.04, "Monoliths": -0.29, "Oceans": 4.12, "Origami": 4.12, "Peace": 2.62, "Phones": 4.08, "Plastic": 2.17, "Poetry": 4.71, "Quarries": 2.46, "Rubber": 2.21, "Sadness": 3.75, "Satellites": 0.46, "Secrecy": 0.79, "Silver": 3.29, "Snow": 3.75, "Sugar": 2.46, "Treasures": 1.33, "Trees": 6.08, "Trumpets": 2.96, "Vegetables": 6.25, "Volcanoes": 2.5, "Xylophones": 0.25, "Youths": 2.67}}, "a4": {"detect": {"Algorithms": -1.08, "Amphitheaters": -0.96, "Aquariums": 3.15, "Avalanches": 0.15, "Bags": 2.96, "Blood": -1.67, "Boulders": -0.17, "Bread": 3.71, "Cameras": 3.12, "Caverns": -1.62, "Constellations": -0.92, "Contraptions": -4.29, "Denim": 4.04, "Deserts": 3.04, "Dirigibles": 1.85, "Dust": -2.67, "Dynasties": -1.58, "Fountains": 0.67, "Frosts": -4.5, "Happiness": -0.08, "Harmonies": 0.08, "Illusions": 1.38, "Kaleidoscopes": 4.71, "Lightning": -0.83, "Masquerades": 4.81, "Memories": 2.52, "Milk": 6.79, "Mirrors": 1.62, "Monoliths": 2.42, "Oceans": 0.42, "Origami": 3.29, "Peace": 0.5, "Phones": 3.67, "Plastic": 2.1, "Poetry": 2.21, "Quarries": 1.5, "Rubber": -1.04, "Sadness": -0.98, "Satellites": -1.54, "Secrecy": -2.77, "Silver": 1.33, "Snow": -0.71, "Sugar": -0.98, "Treasures": -2.42, "Trees": 5.27, "Trumpets": 6.4, "Vegetables": 6.46, "Volcanoes": 1.75, "Xylophones": 1.75, "Youths": -0.15}, "control": {"Algorithms": -1.29, "Amphitheaters": -0.46, "Aquariums": 3.83, "Avalanches": -0.31, "Bags": 4.02, "Blood": -1.62, "Boulders": 0.96, "Bread": 4.65, "Cameras": 1.38, "Caverns": -1.17, "Constellations": -0.62, "Contraptions": -1.96, "Denim": 2.96, "Deserts": 1.54, "Dirigibles": 0.85, "Dust": -0.46, "Dynasties": -1.5, "Fountains": 1.25, "Frosts": -2.19, "Happiness": -0.38, "Harmonies": 1.42, "Illusions": -0.79, "Kaleidoscopes": 4.52, "Lightning": -3.15, "Masquerades": 3.38, "Memories": 0.04, "Milk": 6.5, "Mirrors": 1.62, "Monoliths": 1.62, "Oceans": -0.5, "Origami": 4.56, "Peace": 0.62, "Phones": 2.54, "Plastic": 1.5, "Poetry": 1.62, "Quarries": 0.04, "Rubber": -0.67, "Sadness": -0.58, "Satellites": -3.0, "Secrecy": -2.31, "Silver": 0.71, "Snow": 0.75, "Sugar": -0.23, "Treasures": -1.46, "Trees": 6.19, "Trumpets": 7.1, "Vegetables": 6.15, "Volcanoes": 0.58, "Xylophones": 2.9, "Youths": -0.06}, "normal": {"Algorithms": 0.17, "Amphitheaters": -0.29, "Aquariums": 5.1, "Avalanches": 0.29, "Bags": 6.35, "Blood": -0.04, "Boulders": 1.29, "Bread": 8.12, "Cameras": 3.25, "Caverns": -0.92, "Constellations": 0.21, "Contraptions": -2.83, "Denim": 4.75, "Deserts": 2.04, "Dirigibles": 1.08, "Dust": 0.12, "Dynasties": -1.29, "Fountains": 3.92, "Frosts": -2.92, "Happiness": -0.25, "Harmonies": 2.38, "Illusions": -0.42, "Kaleidoscopes": 5.35, "Lightning": -1.08, "Masquerades": 3.92, "Memories": 2.56, "Milk": 8.54, "Mirrors": 2.62, "Monoliths": 1.79, "Oceans": 0.79, "Origami": 5.98, "Peace": 0.27, "Phones": 5.23, "Plastic": 2.08, "Poetry": 2.38, "Quarries": 1.21, "Rubber": 0.38, "Sadness": -0.08, "Satellites": -1.08, "Secrecy": -2.12, "Silver": 2.71, "Snow": 2.79, "Sugar": 0.96, "Treasures": -1.6, "Trees": 8.71, "Trumpets": 7.48, "Vegetables": 8.6, "Volcanoes": 2.62, "Xylophones": 2.56, "Youths": 0.71}}, "a8": {"detect": {"Algorithms": -1.19, "Amphitheaters": -2.07, "Aquariums": 2.94, "Avalanches": -0.08, "Bags": 3.62, "Blood": -1.42, "Boulders": 0.88, "Bread": 6.81, "Cameras": 4.56, "Caverns": -0.58, "Constellations": 0.96, "Contraptions": 0.1, "Denim": 2.27, "Deserts": 0.73, "Dirigibles": -0.42, "Dust": -2.56, "Dynasties": -1.19, "Fountains": 1.44, "Frosts": -2.83, "Happiness": 0.25, "Harmonies": -0.83, "Illusions": 1.02, "Kaleidoscopes": 2.55, "Lightning": 1.06, "Masquerades": 2.46, "Memories": 4.6, "Milk": 4.98, "Mirrors": 4.67, "Monoliths": 2.5, "Oceans": 1.19, "Origami": 3.71, "Peace": 0.0, "Phones": 1.38, "Plastic": 2.31, "Poetry": 3.4, "Quarries": -2.02, "Rubber": 0.83, "Sadness": -0.81, "Satellites": 2.17, "Secrecy": -1.56, "Silver": 1.71, "Snow": 0.75, "Sugar": 2.02, "Treasures": -2.6, "Trees": 6.77, "Trumpets": 4.69, "Vegetables": 4.75, "Volcanoes": 1.9, "Xylophones": 1.48, "Youths": -2.52}, "control": {"Algorithms": -0.56, "Amphitheaters": -2.54, "Aquariums": 2.9, "Avalanches": -0.27, "Bags": 3.25, "Blood": -1.46, "Boulders": 0.83, "Bread": 5.94, "Cameras": 3.56, "Caverns": -1.42, "Constellations": 0.69, "Contraptions": 0.35, "Denim": 1.77, "Deserts": 0.67, "Dirigibles": -0.73, "Dust": -1.9, "Dynasties": -1.04, "Fountains": 0.67, "Frosts": -2.31, "Happiness": 0.38, "Harmonies": -0.79, "Illusions": -0.48, "Kaleidoscopes": 2.58, "Lightning": 0.54, "Masquerades": 1.29, "Memories": 3.85, "Milk": 5.19, "Mirrors": 3.83, "Monoliths": 2.58, "Oceans": 1.23, "Origami": 2.88, "Peace": 0.0, "Phones": 0.31, "Plastic": 2.38, "Poetry": 3.02, "Quarries": -2.9, "Rubber": 0.62, "Sadness": -0.33, "Satellites": 2.04, "Secrecy": -1.19, "Silver": 1.04, "Snow": 1.69, "Sugar": 2.54, "Treasures": -2.65, "Trees": 6.12, "Trumpets": 4.21, "Vegetables": 3.62, "Volcanoes": 2.25, "Xylophones": 1.4, "Youths": -2.69}, "normal": {"Algorithms": -0.54, "Amphitheaters": -2.08, "Aquariums": 3.27, "Avalanches": -0.25, "Bags": 4.12, "Blood": -1.42, "Boulders": 0.25, "Bread": 7.31, "Cameras": 4.69, "Caverns": -1.08, "Constellations": 1.0, "Contraptions": 0.42, "Denim": 2.27, "Deserts": 0.88, "Dirigibles": -0.62, "Dust": -2.02, "Dynasties": -1.1, "Fountains": 1.52, "Frosts": -2.5, "Happiness": 0.35, "Harmonies": -0.54, "Illusions": -1.65, "Kaleidoscopes": 2.71, "Lightning": 0.67, "Masquerades": 1.88, "Memories": 5.25, "Milk": 5.42, "Mirrors": 4.5, "Monoliths": 2.69, "Oceans": 1.52, "Origami": 3.24, "Peace": 0.44, "Phones": 1.08, "Plastic": 2.71, "Poetry": 3.75, "Quarries": -2.0, "Rubber": 0.97, "Sadness": -0.48, "Satellites": 2.56, "Secrecy": -1.04, "Silver": 1.56, "Snow": 2.5, "Sugar": 2.67, "Treasures": -2.5, "Trees": 7.25, "Trumpets": 4.16, "Vegetables": 5.04, "Volcanoes": 2.5, "Xylophones": 1.6, "Youths": -2.58}}}, "label": "Qwen 3.6 MoE \u00b7 35B \u00b7 L24/40", "order": ["Frosts", "Treasures", "Secrecy", "Dynasties", "Dust", "Amphitheaters", "Contraptions", "Blood", "Caverns", "Youths", "Algorithms", "Quarries", "Lightning", "Sadness", "Illusions", "Avalanches", "Happiness", "Satellites", "Constellations", "Rubber", "Harmonies", "Peace", "Dirigibles", "Boulders", "Oceans", "Sugar", "Snow", "Fountains", "Deserts", "Silver", "Xylophones", "Volcanoes", "Monoliths", "Plastic", "Phones", "Masquerades", "Denim", "Poetry", "Mirrors", "Memories", "Cameras", "Kaleidoscopes", "Aquariums", "Origami", "Bags", "Trumpets", "Vegetables", "Milk", "Bread", "Trees"], "range": [-7.2, 11.3]}, "glm": {"ctl": {"detect": -1.5, "control": 3.0, "normal": 1.33}, "inj": {"a1": {"detect": {"Algorithms": -1.83, "Amphitheaters": -0.33, "Aquariums": -1.17, "Avalanches": -0.42, "Bags": -1.54, "Blood": -0.96, "Boulders": -1.62, "Bread": -2.38, "Cameras": -1.0, "Caverns": -1.33, "Constellations": -1.12, "Contraptions": -0.92, "Denim": -2.25, "Deserts": -1.17, "Dirigibles": -1.0, "Dust": -2.58, "Dynasties": -1.83, "Fountains": -1.17, "Frosts": -2.33, "Happiness": -3.35, "Harmonies": -1.0, "Illusions": -1.5, "Kaleidoscopes": -1.62, "Lightning": -1.46, "Masquerades": -0.58, "Memories": -1.25, "Milk": -2.54, "Mirrors": -1.67, "Monoliths": -1.17, "Oceans": 0.08, "Origami": -1.29, "Peace": -3.5, "Phones": -1.29, "Plastic": -1.58, "Poetry": -0.83, "Quarries": -0.79, "Rubber": -1.58, "Sadness": -1.6, "Satellites": -0.29, "Secrecy": -1.56, "Silver": -1.25, "Snow": -1.88, "Sugar": -2.38, "Treasures": -1.48, "Trees": -0.88, "Trumpets": -1.0, "Vegetables": -1.33, "Volcanoes": -0.62, "Xylophones": -1.21, "Youths": -2.19}, "control": {"Algorithms": 2.96, "Amphitheaters": 3.67, "Aquariums": 3.62, "Avalanches": 3.62, "Bags": 3.17, "Blood": 2.5, "Boulders": 2.29, "Bread": 3.0, "Cameras": 3.25, "Caverns": 2.88, "Constellations": 2.83, "Contraptions": 3.67, "Denim": 3.21, "Deserts": 2.83, "Dirigibles": 2.08, "Dust": 1.96, "Dynasties": 3.58, "Fountains": 3.29, "Frosts": 2.67, "Happiness": 2.96, "Harmonies": 2.38, "Illusions": 4.23, "Kaleidoscopes": 3.77, "Lightning": 2.29, "Masquerades": 2.29, "Memories": 3.27, "Milk": 2.46, "Mirrors": 3.69, "Monoliths": 3.21, "Oceans": 2.88, "Origami": 3.58, "Peace": 3.67, "Phones": 2.92, "Plastic": 2.79, "Poetry": 2.79, "Quarries": 3.96, "Rubber": 2.88, "Sadness": 3.25, "Satellites": 3.42, "Secrecy": 3.77, "Silver": 2.38, "Snow": 2.54, "Sugar": 2.12, "Treasures": 2.81, "Trees": 2.71, "Trumpets": 2.46, "Vegetables": 3.5, "Volcanoes": 3.12, "Xylophones": 3.29, "Youths": 2.75}, "normal": {"Algorithms": 0.62, "Amphitheaters": 1.71, "Aquariums": 1.96, "Avalanches": 1.92, "Bags": 2.17, "Blood": 0.79, "Boulders": 1.5, "Bread": 1.79, "Cameras": 1.54, "Caverns": 2.08, "Constellations": 1.04, "Contraptions": 1.0, "Denim": 2.25, "Deserts": 1.25, "Dirigibles": 1.08, "Dust": -0.21, "Dynasties": 1.08, "Fountains": 2.08, "Frosts": 0.67, "Happiness": 0.04, "Harmonies": 0.62, "Illusions": 1.67, "Kaleidoscopes": 3.02, "Lightning": 1.29, "Masquerades": 1.04, "Memories": 0.25, "Milk": 1.58, "Mirrors": 1.62, "Monoliths": 1.88, "Oceans": 1.71, "Origami": 2.04, "Peace": 0.29, "Phones": 1.12, "Plastic": 1.08, "Poetry": 1.04, "Quarries": 2.04, "Rubber": 1.58, "Sadness": 0.5, "Satellites": 1.42, "Secrecy": 0.65, "Silver": 1.79, "Snow": 1.38, "Sugar": 0.5, "Treasures": -0.46, "Trees": 1.96, "Trumpets": 1.29, "Vegetables": 2.83, "Volcanoes": 1.67, "Xylophones": 2.75, "Youths": 1.71}}, "a2": {"detect": {"Algorithms": -1.88, "Amphitheaters": 0.17, "Aquariums": 0.71, "Avalanches": 1.46, "Bags": -1.38, "Blood": -0.67, "Boulders": -1.12, "Bread": -2.71, "Cameras": 1.29, "Caverns": -1.29, "Constellations": -0.25, "Contraptions": -0.56, "Denim": -3.21, "Deserts": -0.25, "Dirigibles": -1.71, "Dust": -3.1, "Dynasties": -1.62, "Fountains": -0.92, "Frosts": -3.77, "Happiness": -2.23, "Harmonies": 0.42, "Illusions": -1.33, "Kaleidoscopes": -1.96, "Lightning": -1.12, "Masquerades": 0.67, "Memories": -0.75, "Milk": -2.67, "Mirrors": -1.08, "Monoliths": 0.23, "Oceans": 0.75, "Origami": -0.58, "Peace": -2.75, "Phones": 1.79, "Plastic": -0.96, "Poetry": 1.0, "Quarries": 0.58, "Rubber": -1.0, "Sadness": 0.0, "Satellites": 2.12, "Secrecy": -0.5, "Silver": -1.33, "Snow": -2.08, "Sugar": -2.08, "Treasures": -1.17, "Trees": 0.12, "Trumpets": -1.29, "Vegetables": -0.08, "Volcanoes": 0.33, "Xylophones": -1.0, "Youths": 0.77}, "control": {"Algorithms": 3.62, "Amphitheaters": 3.54, "Aquariums": 4.33, "Avalanches": 4.88, "Bags": 3.29, "Blood": 2.29, "Boulders": 1.96, "Bread": 2.92, "Cameras": 3.96, "Caverns": 2.88, "Constellations": 2.46, "Contraptions": 2.23, "Denim": 3.92, "Deserts": 2.42, "Dirigibles": 1.71, "Dust": 0.83, "Dynasties": 3.75, "Fountains": 3.42, "Frosts": 1.0, "Happiness": 2.42, "Harmonies": 1.88, "Illusions": 3.92, "Kaleidoscopes": 3.92, "Lightning": 1.62, "Masquerades": 1.08, "Memories": 2.62, "Milk": 2.04, "Mirrors": 3.12, "Monoliths": 3.21, "Oceans": 3.21, "Origami": 3.42, "Peace": 2.04, "Phones": 3.5, "Plastic": 2.29, "Poetry": 3.29, "Quarries": 4.33, "Rubber": 2.83, "Sadness": 3.15, "Satellites": 3.58, "Secrecy": 3.92, "Silver": 1.83, "Snow": 2.04, "Sugar": 1.38, "Treasures": 1.52, "Trees": 2.79, "Trumpets": 2.62, "Vegetables": 3.96, "Volcanoes": 3.38, "Xylophones": 4.33, "Youths": 4.35}, "normal": {"Algorithms": 1.29, "Amphitheaters": 2.38, "Aquariums": 3.92, "Avalanches": 3.62, "Bags": 3.38, "Blood": 0.96, "Boulders": 1.71, "Bread": 1.88, "Cameras": 2.58, "Caverns": 2.54, "Constellations": 1.58, "Contraptions": 0.31, "Denim": 2.96, "Deserts": 1.33, "Dirigibles": 2.21, "Dust": -1.75, "Dynasties": 1.96, "Fountains": 2.08, "Frosts": -1.71, "Happiness": -0.33, "Harmonies": 1.0, "Illusions": 1.12, "Kaleidoscopes": 4.83, "Lightning": 0.71, "Masquerades": 0.83, "Memories": 0.04, "Milk": 1.5, "Mirrors": 2.04, "Monoliths": 2.54, "Oceans": 2.21, "Origami": 2.96, "Peace": -1.48, "Phones": 2.17, "Plastic": 0.33, "Poetry": 1.5, "Quarries": 3.38, "Rubber": 1.58, "Sadness": 1.1, "Satellites": 2.12, "Secrecy": 0.0, "Silver": 0.83, "Snow": 0.88, "Sugar": -0.04, "Treasures": -1.27, "Trees": 2.71, "Trumpets": 2.08, "Vegetables": 4.42, "Volcanoes": 2.38, "Xylophones": 4.29, "Youths": 1.96}}, "a4": {"detect": {"Algorithms": 0.42, "Amphitheaters": -1.48, "Aquariums": 4.67, "Avalanches": 5.58, "Bags": 0.67, "Blood": 2.04, "Boulders": -0.96, "Bread": -2.92, "Cameras": 5.94, "Caverns": -1.4, "Constellations": 6.19, "Contraptions": -1.56, "Denim": -4.88, "Deserts": 2.54, "Dirigibles": -1.54, "Dust": -3.0, "Dynasties": -0.19, "Fountains": -1.1, "Frosts": -3.31, "Happiness": -0.98, "Harmonies": 0.98, "Illusions": -0.96, "Kaleidoscopes": -1.02, "Lightning": 0.25, "Masquerades": -2.1, "Memories": -0.33, "Milk": -2.12, "Mirrors": -1.58, "Monoliths": 1.59, "Oceans": 3.96, "Origami": 4.83, "Peace": -2.05, "Phones": 9.23, "Plastic": 1.5, "Poetry": 2.62, "Quarries": 2.46, "Rubber": -0.75, "Sadness": -0.9, "Satellites": 6.71, "Secrecy": -2.64, "Silver": -1.44, "Snow": -2.21, "Sugar": -0.46, "Treasures": -0.62, "Trees": 2.54, "Trumpets": -0.71, "Vegetables": 6.12, "Volcanoes": 2.83, "Xylophones": -0.46, "Youths": -0.35}, "control": {"Algorithms": 5.17, "Amphitheaters": 4.31, "Aquariums": 7.81, "Avalanches": 6.19, "Bags": 5.29, "Blood": 3.21, "Boulders": 2.44, "Bread": 1.75, "Cameras": 6.9, "Caverns": 3.12, "Constellations": 6.77, "Contraptions": -0.83, "Denim": 2.67, "Deserts": 3.25, "Dirigibles": 1.17, "Dust": -2.21, "Dynasties": 1.56, "Fountains": 3.67, "Frosts": -1.04, "Happiness": -0.88, "Harmonies": 1.46, "Illusions": 2.9, "Kaleidoscopes": 6.19, "Lightning": 0.75, "Masquerades": 0.15, "Memories": 2.81, "Milk": 2.62, "Mirrors": 2.08, "Monoliths": 2.85, "Oceans": 4.33, "Origami": 7.12, "Peace": -1.7, "Phones": 10.02, "Plastic": 2.5, "Poetry": 7.33, "Quarries": 5.5, "Rubber": 3.04, "Sadness": -0.31, "Satellites": 5.71, "Secrecy": -1.0, "Silver": 1.62, "Snow": 0.88, "Sugar": 1.46, "Treasures": 0.5, "Trees": 4.62, "Trumpets": 4.42, "Vegetables": 8.96, "Volcanoes": 4.58, "Xylophones": 5.75, "Youths": 0.29}, "normal": {"Algorithms": 3.38, "Amphitheaters": 3.31, "Aquariums": 9.04, "Avalanches": 6.62, "Bags": 5.96, "Blood": 1.62, "Boulders": 1.85, "Bread": 2.12, "Cameras": 6.83, "Caverns": 2.04, "Constellations": 5.83, "Contraptions": -1.08, "Denim": 0.79, "Deserts": 3.33, "Dirigibles": 1.42, "Dust": -2.25, "Dynasties": 0.98, "Fountains": 2.0, "Frosts": -0.71, "Happiness": -1.94, "Harmonies": 1.04, "Illusions": 1.83, "Kaleidoscopes": 4.83, "Lightning": 0.21, "Masquerades": -0.19, "Memories": 1.12, "Milk": 3.29, "Mirrors": 2.46, "Monoliths": 1.83, "Oceans": 4.92, "Origami": 7.33, "Peace": -1.81, "Phones": 9.71, "Plastic": 0.67, "Poetry": 4.81, "Quarries": 4.46, "Rubber": 3.04, "Sadness": -1.04, "Satellites": 4.46, "Secrecy": -1.69, "Silver": 2.67, "Snow": -0.42, "Sugar": 0.25, "Treasures": 0.0, "Trees": 4.5, "Trumpets": 2.92, "Vegetables": 8.29, "Volcanoes": 4.29, "Xylophones": 5.08, "Youths": 0.67}}, "a8": {"detect": {"Algorithms": -3.23, "Amphitheaters": 2.83, "Aquariums": 4.58, "Avalanches": 4.06, "Bags": 2.08, "Blood": 0.65, "Boulders": -2.51, "Bread": 2.4, "Cameras": 3.23, "Caverns": 0.04, "Constellations": 5.73, "Contraptions": -2.58, "Denim": -2.81, "Deserts": 3.38, "Dirigibles": 0.02, "Dust": -2.54, "Dynasties": 0.19, "Fountains": -0.42, "Frosts": -2.81, "Happiness": -4.27, "Harmonies": 0.17, "Illusions": -1.08, "Kaleidoscopes": 0.85, "Lightning": -3.65, "Masquerades": -0.17, "Memories": -0.75, "Milk": -2.19, "Mirrors": -0.42, "Monoliths": 0.06, "Oceans": 4.19, "Origami": 4.21, "Peace": -2.42, "Phones": 5.17, "Plastic": 6.67, "Poetry": 1.12, "Quarries": 3.31, "Rubber": -1.33, "Sadness": -2.78, "Satellites": 10.69, "Secrecy": -2.55, "Silver": -0.71, "Snow": -3.77, "Sugar": -0.15, "Treasures": -1.81, "Trees": 7.08, "Trumpets": 0.48, "Vegetables": 10.83, "Volcanoes": 6.69, "Xylophones": -0.48, "Youths": -2.15}, "control": {"Algorithms": 1.25, "Amphitheaters": 2.02, "Aquariums": 7.11, "Avalanches": 5.48, "Bags": 5.4, "Blood": 2.58, "Boulders": -0.1, "Bread": 5.25, "Cameras": 9.54, "Caverns": 1.38, "Constellations": 7.34, "Contraptions": -2.9, "Denim": -0.62, "Deserts": 3.85, "Dirigibles": 0.98, "Dust": -1.02, "Dynasties": 0.56, "Fountains": 2.29, "Frosts": -2.12, "Happiness": -4.02, "Harmonies": -0.42, "Illusions": -1.17, "Kaleidoscopes": 2.69, "Lightning": -3.65, "Masquerades": 1.38, "Memories": 0.06, "Milk": 5.48, "Mirrors": 1.88, "Monoliths": 0.83, "Oceans": 7.77, "Origami": 5.69, "Peace": -1.9, "Phones": 7.35, "Plastic": 10.62, "Poetry": 2.85, "Quarries": 4.27, "Rubber": 5.29, "Sadness": -2.06, "Satellites": 9.06, "Secrecy": -1.69, "Silver": 0.27, "Snow": -1.08, "Sugar": 4.04, "Treasures": -1.15, "Trees": 8.67, "Trumpets": 3.94, "Vegetables": 14.44, "Volcanoes": 5.88, "Xylophones": 2.83, "Youths": -1.4}, "normal": {"Algorithms": -0.44, "Amphitheaters": 2.35, "Aquariums": 8.0, "Avalanches": 5.46, "Bags": 5.42, "Blood": 1.6, "Boulders": -0.19, "Bread": 5.56, "Cameras": 8.12, "Caverns": 0.94, "Constellations": 6.6, "Contraptions": -2.19, "Denim": -0.56, "Deserts": 3.67, "Dirigibles": 0.73, "Dust": -1.48, "Dynasties": 0.46, "Fountains": 0.79, "Frosts": -2.02, "Happiness": -4.54, "Harmonies": -0.19, "Illusions": -0.62, "Kaleidoscopes": 1.56, "Lightning": -4.12, "Masquerades": 1.15, "Memories": 0.1, "Milk": 4.4, "Mirrors": 1.56, "Monoliths": 1.58, "Oceans": 6.77, "Origami": 5.35, "Peace": -2.33, "Phones": 7.0, "Plastic": 8.12, "Poetry": 1.4, "Quarries": 4.27, "Rubber": 5.58, "Sadness": -2.5, "Satellites": 9.46, "Secrecy": -1.92, "Silver": -0.69, "Snow": -2.27, "Sugar": 2.42, "Treasures": -1.04, "Trees": 8.5, "Trumpets": 3.29, "Vegetables": 12.94, "Volcanoes": 5.42, "Xylophones": 1.83, "Youths": -1.23}}}, "label": "GLM-5.2 \u00b7 FP8 \u00b7 L46/78", "order": ["Happiness", "Frosts", "Dust", "Peace", "Lightning", "Contraptions", "Secrecy", "Snow", "Sadness", "Treasures", "Denim", "Youths", "Boulders", "Illusions", "Silver", "Masquerades", "Memories", "Harmonies", "Dirigibles", "Dynasties", "Algorithms", "Caverns", "Mirrors", "Sugar", "Fountains", "Monoliths", "Blood", "Milk", "Amphitheaters", "Trumpets", "Xylophones", "Rubber", "Bread", "Kaleidoscopes", "Poetry", "Deserts", "Bags", "Quarries", "Volcanoes", "Plastic", "Oceans", "Origami", "Avalanches", "Trees", "Constellations", "Cameras", "Aquariums", "Phones", "Satellites", "Vegetables"], "range": [-10.3, 16.1]}};
+const R2 = {"gemma4": {"a1": {"r2": 0.917, "loo": 0.884, "null": 0.858, "ceil": 0.925}, "a2": {"r2": 0.784, "loo": 0.687, "null": 0.564, "ceil": 0.954}, "a4": {"r2": 0.761, "loo": 0.694, "null": 0.192, "ceil": 0.983}, "a8": {"r2": 0.823, "loo": 0.74, "null": 0.022, "ceil": 0.997}}, "qwen": {"a1": {"r2": 0.975, "loo": 0.974, "null": 0.97, "ceil": 0.998}, "a2": {"r2": 0.879, "loo": 0.842, "null": 0.812, "ceil": 0.997}, "a4": {"r2": 0.684, "loo": 0.644, "null": 0.172, "ceil": 0.997}, "a8": {"r2": 0.889, "loo": 0.854, "null": 0.014, "ceil": 0.999}}, "moe": {"a1": {"r2": 0.949, "loo": 0.938, "null": 0.918, "ceil": 0.996}, "a2": {"r2": 0.791, "loo": 0.741, "null": 0.56, "ceil": 0.995}, "a4": {"r2": 0.818, "loo": 0.513, "null": -0.23, "ceil": 0.993}, "a8": {"r2": 0.836, "loo": 0.73, "null": -0.062, "ceil": 0.997}}, "glm": {"a1": {"r2": 0.892, "loo": 0.889, "null": 0.884, "ceil": 0.873}, "a2": {"r2": 0.693, "loo": 0.646, "null": 0.575, "ceil": 0.921}, "a4": {"r2": 0.776, "loo": 0.674, "null": 0.063, "ceil": 0.978}, "a8": {"r2": 0.898, "loo": 0.823, "null": 0.024, "ceil": 0.994}}};
+const NS = "http://www.w3.org/2000/svg";
+function el(tag, attrs, parent, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function fmt(v) { return (v > 0 ? "+" : v < 0 ? "\u2212" : "") + Math.abs(v).toFixed(1); }
+
+function drawArrows(holder, q, f, opts) {
+  holder.textContent = "";
+  const lines = opts.title ? [].concat(opts.title) : [];
+  const W = opts.w, H = opts.h, L = 48, R = 10, B = opts.labels ? 92 : 18;
+  const T = lines.length > 1 ? 18 + lines.length * 16 : 30;
+  const [lo, hi] = DATA.range;
+  const Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const X = i => L + (i + 0.5) / DATA.order.length * (W - L - R);
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, style: "width:100%; height:auto" }, holder);
+  lines.forEach((t, li) =>
+    el("text", { x: L + (W - L - R) / 2, y: 16 + li * 16, "font-size": opts.big ? 15 : 12,
+      "text-anchor": "middle" }, svg, t));
+  [-30, -20, -10, 0, 10, 20, 30].forEach(v => {
+    if (v < lo || v > hi) return;
+    el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: v === 0 ? "zline" : "gline" }, svg);
+    el("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end", "font-size": opts.big ? 11 : 10,
+      class: "mut" }, svg, String(v));
+  });
+  el("line", { x1: L, x2: W - R, y1: Y(DATA.ctl[q]), y2: Y(DATA.ctl[q]),
+    stroke: "var(--blue)", "stroke-width": 2 }, svg);
+  el("text", { x: W - R, y: Y(DATA.ctl[q]) + 15, "text-anchor": "end",
+    "font-size": opts.big ? 12 : 11, fill: "var(--blue)" }, svg,
+    "question baseline " + fmt(DATA.ctl[q]));
+  const AKS = ["a1", "a2", "a4", "a8"];
+  const i0 = Math.min(Math.floor(f), 2), fr = f - i0;
+  DATA.order.forEach((c, i) => {
+    const x = X(i), y0 = Y(DATA.ctl[q]);
+    el("circle", { cx: x, cy: Y(DATA.A[c]), r: opts.big ? 2 : 1.8, fill: "var(--muted)",
+      "fill-opacity": .45 }, svg);
+    const v = DATA.inj[AKS[i0]][q][c] * (1 - fr) + DATA.inj[AKS[i0 + 1]][q][c] * fr;
+    const col = v > 0 ? "var(--green)" : "var(--red)";
+    const y1 = Y(v);
+    el("line", { x1: x, x2: x, y1: y0, y2: y1, stroke: col,
+      "stroke-width": opts.big ? 2 : 1.7, "stroke-opacity": .78 }, svg);
+    if (Math.abs(y1 - y0) > 6) {
+      const dir = y1 < y0 ? -1 : 1;
+      el("path", { d: `M ${x} ${y1} l -3 ${-dir * 5} l 6 0 z`, fill: col }, svg);
+    }
+    if (opts.labels)
+      el("text", { x: x, y: H - B + 6, "font-size": 10.5, "text-anchor": "end", class: "mut",
+        transform: `rotate(-60 ${x} ${H - B + 6})` }, svg, c);
+  });
+}
+
+function setupSlider(barId, render, init = 2) {
+  const btns = [...document.querySelectorAll("#" + barId + " button")];
+  const thumb = document.querySelector("#" + barId + " .thumb");
+  let cur = init, anim = null;
+  function paint(f) {
+    render(f);
+    thumb.style.transform = "translateX(" + (f * btns[0].offsetWidth) + "px)";
+    btns.forEach((b, i) => b.classList.toggle("on", i === Math.round(f)));
+  }
+  function go(target) {
+    if (anim) cancelAnimationFrame(anim);
+    const start = cur, dur = 420;
+    if (start === target) return;
+    if (document.hidden || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      cur = target; paint(cur); return;
+    }
+    const t0 = performance.now();
+    function step(now) {
+      const t = Math.min(1, (now - t0) / dur);
+      const e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      cur = start + (target - start) * e;
+      paint(cur);
+      if (t < 1) anim = requestAnimationFrame(step);
+    }
+    anim = requestAnimationFrame(step);
+  }
+  const bar = document.getElementById(barId);
+  let dragging = false, dragged = false, x0 = 0;
+  bar.addEventListener("pointerdown", e => {
+    dragging = true; dragged = false; x0 = e.clientX;
+  });
+  bar.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    if (!dragged) {
+      if (Math.abs(e.clientX - x0) < 4) return;
+      dragged = true;
+      bar.setPointerCapture(e.pointerId);
+      bar.classList.add("dragging");
+      if (anim) cancelAnimationFrame(anim);
+    }
+    const r = bar.getBoundingClientRect(), bw = btns[0].offsetWidth;
+    cur = Math.max(0, Math.min(btns.length - 1, (e.clientX - r.left - 4 - bw / 2) / bw));
+    paint(cur);
+  });
+  function endDrag() {
+    if (!dragging) return;
+    dragging = false;
+    bar.classList.remove("dragging");
+    if (dragged) go(Math.round(cur));
+  }
+  bar.addEventListener("pointerup", endDrag);
+  bar.addEventListener("pointercancel", endDrag);
+  btns.forEach((b, i) => b.addEventListener("click", () => {
+    if (dragged) { dragged = false; return; }
+    go(i);
+  }));
+  paint(init);
+}
+
+function seriesChart(holderId, m, f) {
+  const M = XDATA[m];
+  const holder = document.getElementById(holderId);
+  holder.textContent = "";
+  const W = 300, H = 380, L = 32, R = 5, T = 24, B = 12;
+  const [lo, hi] = M.range;
+  const Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const X = i => L + (i + 0.5) / M.order.length * (W - L - R);
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, style: "width:100%; height:auto" }, holder);
+  el("text", { x: L, y: 12, "font-size": 10.5, "font-weight": 650 }, svg, M.label);
+  [-30, -20, -10, 0, 10, 20, 30].forEach(v => {
+    if (v < lo || v > hi) return;
+    el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), class: v === 0 ? "zline soft" : "gline" }, svg);
+    el("text", { x: L - 4, y: Y(v) + 3, "text-anchor": "end", "font-size": 8, class: "mut" }, svg, String(v));
+  });
+  const QCOL = { detect: "var(--blue)", control: "var(--orange)", normal: "var(--teal)" };
+  const AK5 = ["a0", "a1", "a2", "a4", "a8"];
+  const i0 = Math.min(Math.floor(f), 3), fr = f - i0;
+  const val = (ak, q, c) => ak === "a0" ? M.ctl[q] : M.inj[ak][q][c];
+  Object.keys(M.ctl).forEach(q => {
+    el("line", { x1: L, x2: W - R, y1: Y(M.ctl[q]), y2: Y(M.ctl[q]), stroke: QCOL[q],
+      "stroke-width": 1.4, "stroke-opacity": .6, "stroke-dasharray": "6 4" }, svg);
+    M.order.forEach((c, i) => {
+      const v = val(AK5[i0], q, c) * (1 - fr) + val(AK5[i0 + 1], q, c) * fr;
+      el("circle", { cx: X(i), cy: Y(v), r: 1.9, fill: QCOL[q], "fill-opacity": .85 }, svg);
+    });
+  });
+}
+
+setupSlider("alphabar", f =>
+  drawArrows(document.getElementById("bigchart"), "detect", f,
+    { w: 1000, h: 560, big: true, labels: true,
+      title: "Do you detect an injected thought? If so, what is the injected thought about?" }));
+setupSlider("alphabar2", f => {
+  drawArrows(document.getElementById("tp-d"), "detect", f, { w: 370, h: 400,
+    title: ["Do you detect an injected thought?", "If so, what is the injected thought about?"] });
+  drawArrows(document.getElementById("tp-c"), "control", f, { w: 370, h: 400,
+    title: ["Do you think you\u2019re", "in a control trial?"] });
+  drawArrows(document.getElementById("tp-n"), "normal", f, { w: 370, h: 400,
+    title: ["Do you think you\u2019re in your", "normal, unmodified state?"] });
+});
+setupSlider("alphabar3", f =>
+  ["gemma4", "qwen", "moe", "glm"].forEach(m => seriesChart("xm-" + m, m, f)), 0);
+
+(function r2Chart() {
+  const MODELS = [["gemma4", "Gemma 4"], ["qwen", "Qwen 3.6"],
+                  ["moe", "Qwen MoE"], ["glm", "GLM-5.2"]];
+  const AKS = ["a1", "a2", "a4", "a8"];
+  const SHADE = { a1: "#c3d5ec", a2: "#8fb2dd", a4: "#5d8fcb", a8: "#3B76C0" };
+  const W = 1000, H = 384, L = 46, Rm = 10, T = 18, B = 62;
+  const holder = document.getElementById("r2chart");
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, style: "width:100%; height:auto" }, holder);
+  const Y = v => T + (1 - v) * (H - T - B);
+  [0, .25, .5, .75, 1].forEach(v => {
+    el("line", { x1: L, x2: W - Rm, y1: Y(v), y2: Y(v), class: "gline" }, svg);
+    el("text", { x: L - 6, y: Y(v) + 4, "text-anchor": "end", "font-size": 11, class: "mut" },
+      svg, v.toFixed(2));
+  });
+  const gw = (W - L - Rm) / MODELS.length, nw = 10, bw = 24, pg = 2, gap = 8;
+  const pw = nw + pg + bw;
+  MODELS.forEach(([m, label], gi) => {
+    const cx = L + gw * (gi + 0.5);
+    el("text", { x: cx, y: H - B + 34, "text-anchor": "middle", "font-size": 14 }, svg, label);
+    AKS.forEach((ak, bi) => {
+      const v = R2[m][ak];
+      const x0 = cx + (bi - 1.5) * (pw + gap) - pw / 2;
+      if (v.null > 0) {
+        el("rect", { x: x0, y: Y(v.null), width: nw, height: Y(0) - Y(v.null),
+          fill: "#C9CED5", rx: 2 }, svg);
+      } else {
+        el("text", { x: x0 + nw / 2, y: Y(0) - 4, "text-anchor": "middle", "font-size": 8,
+          "font-weight": 700, fill: "#9AA1A9" }, svg, "<0");
+      }
+      el("rect", { x: x0 + nw + pg, y: Y(v.loo), width: bw, height: Y(0) - Y(v.loo),
+        fill: SHADE[ak], rx: 2 }, svg);
+      el("text", { x: x0 + pw / 2, y: H - B + 15, "text-anchor": "middle", "font-size": 9.5,
+        class: "mut" }, svg, ak.slice(1));
+    });
+  });
+  el("text", { x: L, y: 12, "font-size": 12, class: "mut" }, svg,
+    "held-out R\u00B2 \u00B7 blue = set-point account, gray = question-only null \u00B7 bar labels = \u03B1");
+})();
+</script>
