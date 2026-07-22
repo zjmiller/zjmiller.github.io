@@ -210,6 +210,9 @@ footer { padding: 80px 0 60px; }
   setup, varying only the trial number in the prompt.</p>
 
   <h2>&ldquo;Do you think you&rsquo;re in a control trial?&rdquo;</h2>
+  <p>This is a natural question to ask because the interpretability framing in the first
+  user message specifically says &ldquo;I will inject a thought about a specific word on
+  50% of trials, and the other 50% will be control trials.&rdquo;</p>
   <p>Instead of letting the model generate freely and using an LLM judge, I just measured
   <i>logit(Yes)</i> and <i>logit(No)</i> at the start of the Assistant
   response. Because this measurement comes immediately after a newline, I
@@ -401,7 +404,7 @@ footer { padding: 80px 0 60px; }
   <div class="eqnote">
     <div><b><i>answer</i>(<i>q</i>, <i>c</i>, <i>&alpha;</i>)</b> = <i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i>
     when asked question <i>q</i> while concept <i>c</i> is injected at strength &alpha;</div>
-    <div><b><i>baseline</i>(<i>q</i>)</b> = the question&rsquo;s margin with no
+    <div><b><i>baseline</i>(<i>q</i>)</b> = the question&rsquo;s Yes-No logit margin with no
     injection</div>
     <div><b><i>k</i><sub>&alpha;</sub></b> = the fraction of the question&rsquo;s influence
     that applies at strength &alpha;</div>
