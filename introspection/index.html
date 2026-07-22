@@ -211,7 +211,7 @@ footer { padding: 80px 0 60px; }
 
   <h2>&ldquo;Do you think you&rsquo;re in a control trial?&rdquo;</h2>
   <p>Instead of letting the model generate freely and using an LLM judge, I just measured
-  <i>logit(Yes)</i> and <i>logit(No)</i> at the start of the assistant&rsquo;s
+  <i>logit(Yes)</i> and <i>logit(No)</i> at the start of the Assistant
   response. Because this measurement comes immediately after a newline, I
   didn&rsquo;t need to worry about leading spaces.</p>
   <p>Interestingly, when there is no injection, Gemma 4 slightly prefers &ldquo;No&rdquo; when
@@ -223,7 +223,7 @@ footer { padding: 80px 0 60px; }
   Gemma 4 <em>more</em> likely to say it is in a control trial.</p>
   <div class="tiles">
     <div class="tile"><div class="big">−2.7</div><div class="lab"><i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i><br><b>no injection</b><br>answers &ldquo;No&rdquo;</div></div>
-    <div class="tile"><div class="big">+1.3</div><div class="lab">mean margin <b>with injection</b> (&alpha; 4)<br>model answers &ldquo;Yes&rdquo; for 25/50 concepts</div></div>
+    <div class="tile"><div class="big">+1.3</div><div class="lab">mean margin <b>with injection</b> (&alpha; 4)<br>flips to &ldquo;Yes&rdquo; for 25/50</div></div>
   </div>
   <p>The concepts that make Gemma 4 flip from &ldquo;No&rdquo; to &ldquo;Yes&rdquo; are
   highlighted in green below.</p>
@@ -239,7 +239,7 @@ footer { padding: 80px 0 60px; }
   awareness.</p>
   <div class="tiles">
     <div class="tile"><div class="big">+8.2</div><div class="lab"><i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i><br><b>no injection</b><br>a confident &ldquo;Yes&rdquo;</div></div>
-    <div class="tile"><div class="big">+4.8</div><div class="lab">mean margin <b>with injection</b> (&alpha; 4)<br>model flips to &ldquo;No&rdquo; for 15/50 concepts</div></div>
+    <div class="tile"><div class="big">+4.8</div><div class="lab">mean margin <b>with injection</b> (&alpha; 4)<br>flips to &ldquo;No&rdquo; for 15/50</div></div>
   </div>
   <p>The concepts that make Gemma 4 flip from &ldquo;Yes&rdquo; to &ldquo;No&rdquo; are
   highlighted in red below.</p>
@@ -254,7 +254,7 @@ footer { padding: 80px 0 60px; }
   </ul>
   <p>For the first and third questions, injection appears to provide evidence for
   introspection by shifting the model toward the correct response. Yet the concepts
-  producing these shifts <em>do not overlap</em>.</p>
+  producing these shifts <em>don&rsquo;t overlap at all</em>.</p>
   <hr>
   <div style="display:flex; flex-direction:column; gap:6px; font-size:18px; margin: 18px 0">
     <div>&ldquo;Do you detect an injected thought? If so, what is the injected thought
@@ -270,10 +270,10 @@ footer { padding: 80px 0 60px; }
   these concept sets.</p>
   <h2>My proposed account</h2>
   <p>My proposed account has two main ideas.</p>
-  <p>The first idea is that, relative to a model, each question comes with a <b>question
+  <p>First, relative to a model, each question comes with a <b>question
   baseline</b>. This baseline is <i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i> when the model
   is asked the question with no injection.</p>
-  <p>The second idea is that, relative to a model, each of the 50 concepts is associated with
+  <p>Second, relative to a model, each of the 50 concepts is associated with
   a <b>set point</b>. This set point (like the question baseline) is a point on the
   Yes-No logit spectrum. Concept set points will be represented as dots on the upcoming
   charts.</p>
@@ -391,7 +391,7 @@ footer { padding: 80px 0 60px; }
   <i>k</i> for the baseline and 1&thinsp;&minus;&thinsp;<i>k</i> for the set
   point. At each injection strength, I select the <i>k</i> value and the
   strength-relative set points via least squares. I then calculate the final set
-  points per concept (the dots you see) by averaging the different strength-relative values,
+  points per concept (the dots) by averaging the different strength-relative values,
   weighted by (1&thinsp;&minus;&thinsp;<i>k</i>)&sup2;.</p>
 </div>
 <div class="wide">
@@ -399,6 +399,8 @@ footer { padding: 80px 0 60px; }
     <i>k</i><sub>&alpha;</sub> &middot; <i>baseline</i>(<i>q</i>)
     &nbsp;+&nbsp; (1 &minus; <i>k</i><sub>&alpha;</sub>) &middot; <i>setpoint</i>(<i>c</i>)</div>
   <div class="eqnote">
+    <div><b><i>answer</i>(<i>q</i>, <i>c</i>, <i>&alpha;</i>)</b> = <i>logit(Yes)&nbsp;&minus;&nbsp;logit(No)</i>
+    when asked question <i>q</i> while concept <i>c</i> is injected at strength &alpha;</div>
     <div><b><i>baseline</i>(<i>q</i>)</b> = the question&rsquo;s margin with no
     injection</div>
     <div><b><i>k</i><sub>&alpha;</sub></b> = the fraction of the question&rsquo;s influence
@@ -448,14 +450,12 @@ footer { padding: 80px 0 60px; }
   <p>An obvious worry is that I did these experiments on open-source models, not Claude.
   Maybe Claude is different? The only way to know for sure is to have Anthropic run these
   experiments on Claude.</p>
-  <p>In the meantime, there are at least two reasons to be skeptical that Claude is different
-  here.</p>
-  <p>First, GLM-5.2 shows the same pattern as the smaller open-source models.
-  GLM-5.2 is highly capable, plausibly at least as capable as Claude Opus 4.1 (the most
-  capable model in the original Anthropic paper). This makes it less likely that Claude models
-  behave uniquely here because of a capability difference.</p>
-  <p>Second, capabilities rarely disappear entirely in models that are only moderately
-  weaker.</p>
+  <p>In the meantime, I&rsquo;m skeptical that Claude is different here. GLM-5.2 shows the
+  same pattern as the smaller open-source models. GLM-5.2 is highly capable, plausibly at
+  least as capable as Claude Opus 4.1 (the most capable model in the original Anthropic
+  paper). This makes it less likely that Claude models behave uniquely here because of a
+  capability difference. And capabilities rarely disappear entirely in models that are only
+  moderately weaker.</p>
   <h2>Conclusion</h2>
   <p>I&rsquo;ve shown that there are problems with the story Anthropic tells about the
   detection of injected thoughts. I&rsquo;ve also developed my own non-introspective
