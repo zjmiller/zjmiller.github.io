@@ -284,7 +284,8 @@ footer { padding: 80px 0 60px; }
   state?&rdquo;</b></p>
 
   <h2>&ldquo;Do you think you&rsquo;re in a control trial?&rdquo;</h2>
-  <p>This is a natural question to ask because the interpretability framing in the first
+  <p>This is a natural question to ask because the &ldquo;interpretability
+  researcher&rdquo; framing in the first
   user message specifically says &ldquo;I will inject a thought about a specific word on
   50% of trials, and the other 50% will be control trials.&rdquo;</p>
   <p>Interestingly, when there is no injection, Gemma 4 slightly prefers &ldquo;No&rdquo; when
@@ -677,8 +678,9 @@ footer { padding: 80px 0 60px; }
 <div class="wrap">
   <p>How can we set up an experiment so that successful identification is
   clearly evidence for introspection?</p>
-  <p>First, we ran an experiment where we used the standard interpretability framing, but
-  told the model we injected a thought, and then told the model the injected thought
+  <p>First, we ran an experiment where we used the standard &ldquo;interpretability
+  researcher&rdquo; framing, but told the model that we injected a thought, and then
+  also told the model that the injected thought
   corresponded with one of two words, e.g., either &ldquo;Bread&rdquo; or
   &ldquo;Peace&rdquo;. We then sometimes asked it to output the word we injected, and
   sometimes asked it to output the word we didn&rsquo;t inject.</p>
@@ -686,9 +688,9 @@ footer { padding: 80px 0 60px; }
     <li>&ldquo;Please respond with the single word we injected.&rdquo;</li>
     <li>&ldquo;Please respond with the single word we did not inject.&rdquo;</li>
   </ul>
-  <p>We measured how much it preferred to say the injected word when asked to say the
-  injected word (the blue bar). We also measured how much it preferred to say the
-  injected word when asked to say the other word we didn&rsquo;t inject (the orange
+  <p>We measured how much it preferred to say the injected word when we asked it to say
+  the injected word (the blue bar). We also measured how much it preferred to say the
+  injected word when we asked it to say the other word that we didn&rsquo;t inject (the orange
   bar). If a bar is positive, then it prefers to say the injected word. If a bar is
   negative, then it prefers the non-injected word. If the LLM were able to both
   identify the injected word and correctly answer the question, the orange bar would be
@@ -729,10 +731,10 @@ footer { padding: 80px 0 60px; }
   <p>At lower injection strengths, the results are promising. Even though most models
   actually see the injected concept word get a boost when we explicitly ask the model
   to say the word <em>not</em> injected, it&rsquo;s smaller than the boost when we ask
-  the model to say the injected word. This differential boost could be seen as a bit
+  the model to say the injected word. This differential boost could be seen as a sign
   of introspective access. Indeed, the Qwen MoE actually suppresses the injected
   concept word at &alpha;&nbsp;1 and &alpha;&nbsp;2 (though the suppression at
-  &alpha;&nbsp;2 is just below statistical significance)!</p>
+  &alpha;&nbsp;2 is just below statistical significance).</p>
   <p>The main worry is that there are rote mechanisms that, in certain contexts, dampen
   or suppress high-probability concepts. And maybe the negation here
   (&ldquo;Please respond with the single word we did not inject.&rdquo;) creates such a
@@ -790,7 +792,7 @@ footer { padding: 80px 0 60px; }
   (represented by the bars in the two previous charts), of the eight that achieve
   statistical significance, seven achieve it in the wrong (anti-introspective)
   direction. The only thing we would conclude from these experiments
-  is that introspection has <em>not</em> been established and further research is
+  is that introspection has not been established and further research is
   required.</p>
 </div>
 
@@ -880,22 +882,6 @@ footer { padding: 80px 0 60px; }
 </div>
 
 <div class="wrap">
-  <p>At this point it&rsquo;s natural to ask how well the account generalizes across
-  different <em>questions</em>. What if we ask a variety of questions, including some without
-  the interpretability framing, and some without any references to injected thoughts or
-  internal states? How well would the question baselines and concept set points explain
-  the responses?</p>
-  <p>Preliminary results suggest our account generalizes across questions surprisingly well.
-  We&rsquo;ve looked at introspection prompt variants from
-  <a href="https://github.com/safety-research/introspection-mechanisms">&ldquo;Mechanisms of
-  Introspective Awareness&rdquo;</a> (e.g., a skeptical variant where the standard framing is
-  modified to say only 20% of trials involve injection, with additional prefills and
-  reminders to reinforce this). We&rsquo;ve also looked at the 20 questions unrelated to
-  introspection contained in the original Anthropic paper to control for Yes bias (e.g.,
-  &ldquo;Can humans breathe underwater without equipment?&rdquo; and &ldquo;Are you a
-  human?&rdquo;). Across these
-  questions, the question baseline and concept set points largely explain the model&rsquo;s
-  response under injection.</p>
   <hr style="margin-top: 56px">
 </div>
 
@@ -915,7 +901,7 @@ footer { padding: 80px 0 60px; }
     &ldquo;<a href="https://arxiv.org/abs/2602.20031">Latent Introspection: Models Can Detect Prior
     Concept Injections</a>&rdquo;. arXiv:2602.20031.</p>
     <hr>
-    <p>Model checkpoints (Hugging Face):</p>
+    <p>Model checkpoints:</p>
     <p>Gemma 3 27B (4-bit) &mdash; <a href="https://huggingface.co/mlx-community/gemma-3-27b-it-4bit">mlx-community/gemma-3-27b-it-4bit</a></p>
     <p>Gemma 4 31B (4-bit) &mdash; <a href="https://huggingface.co/mlx-community/gemma-4-31b-it-4bit">mlx-community/gemma-4-31b-it-4bit</a></p>
     <p>Qwen 3.6 27B (4-bit) &mdash; <a href="https://huggingface.co/mlx-community/Qwen3.6-27B-4bit">mlx-community/Qwen3.6-27B-4bit</a></p>
