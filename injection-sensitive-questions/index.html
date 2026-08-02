@@ -201,19 +201,12 @@ Therefore:
     buttons.forEach(function (b) {
       b.classList.toggle('on', b.dataset.model === m);
     });
-    if (push) {
-      try {
-        history.replaceState(null, '',
-          location.pathname + (m === 'qwen' ? '?model=qwen' : ''));
-      } catch (e) { /* sandboxed viewers may refuse; toggle still works */ }
-      window.scrollTo(0, 0);
-    }
+    if (push) window.scrollTo(0, 0);
   }
   buttons.forEach(function (b) {
     b.addEventListener('click', function () { activate(b.dataset.model, true); });
   });
-  var params = new URLSearchParams(location.search);
-  activate(params.get('model') === 'qwen' ? 'qwen' : 'gemma', false);
+  activate('gemma', false);
 
   function turnEl(concept, trial, verdict, text) {
     var turn = document.createElement('div');
