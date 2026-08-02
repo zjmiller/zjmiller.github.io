@@ -202,15 +202,20 @@ Therefore:
       b.classList.toggle('on', b.dataset.model === m);
     });
     if (push) {
-      history.replaceState(null, '', '#' + m);
+      try {
+        history.replaceState(null, '',
+          location.pathname + (m === 'qwen' ? '?model=qwen' : ''));
+      } catch (e) { /* sandboxed viewers may refuse; toggle still works */ }
       window.scrollTo(0, 0);
     }
   }
   buttons.forEach(function (b) {
     b.addEventListener('click', function () { activate(b.dataset.model, true); });
   });
+  var params = new URLSearchParams(location.search);
   var h = location.hash.slice(1);
-  activate(h.indexOf('qwen') === 0 ? 'qwen' : 'gemma', false);
+  activate(params.get('model') === 'qwen' || h.indexOf('qwen') === 0
+           ? 'qwen' : 'gemma', false);
   if (h) {
     var target = document.getElementById(h);
     if (target) target.scrollIntoView();
