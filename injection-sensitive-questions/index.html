@@ -213,13 +213,7 @@ Therefore:
     b.addEventListener('click', function () { activate(b.dataset.model, true); });
   });
   var params = new URLSearchParams(location.search);
-  var h = location.hash.slice(1);
-  activate(params.get('model') === 'qwen' || h.indexOf('qwen') === 0
-           ? 'qwen' : 'gemma', false);
-  if (h) {
-    var target = document.getElementById(h);
-    if (target) target.scrollIntoView();
-  }
+  activate(params.get('model') === 'qwen' ? 'qwen' : 'gemma', false);
 
   function turnEl(concept, trial, verdict, text) {
     var turn = document.createElement('div');
