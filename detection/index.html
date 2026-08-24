@@ -1399,9 +1399,8 @@ footer { padding: 80px 0 60px; }
 <div class="wrap">
   <p>Consider a single model. We have 450 logit preference values per injection
   strength, and we have 4 injection strengths at alpha 1, 2, 4, and 8. So we have 1800
-  observations total. Ideally, we&rsquo;d like to predict those values
-  in terms of hypothesized independent values for the 50 concept set-points and 4
-  <i>k</i> values. We test this using leave-one-out
+  observations total. We&rsquo;d like to predict those
+  observed values in terms of the 50 concept set-points and 4 <i>k</i> values. We test this using leave-one-out
   cross-validation (LOO-CV), i.e., by calculating the best values for the concept set-points
   and <i>k</i> values while leaving out a question, and then seeing how well those
   values predict the held-out question&rsquo;s variance. We can do this with each
