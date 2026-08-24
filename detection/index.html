@@ -1364,17 +1364,15 @@ footer { padding: 80px 0 60px; }
 <div class="wrap">
   <h2>A partial account of the data: the concept set-point theory</h2>
   <p>We can explain a lot of these results in the following way. Logit preferences
-  depend on three factors: (1) the question baseline, i.e., value of logit preference
+  depend on three factors: (1) the question baseline, i.e., the value of logit preference
   before injection, (2) a hypothesized
   &ldquo;set-point&rdquo; value that each concept possesses that pulls the Yes/No
   preference towards it, and (3) a percentage <i>k</i>, varying
   with injection strength, that determines how much the baseline contributes to the
   logit preference (<i>k</i>%) and how much the concept set-point contributes
-  (100&nbsp;&minus;&nbsp;<i>k</i>%). The first of these three values can be
+  (100%&nbsp;&minus;&nbsp;<i>k</i>%). The first of these three values can be
   directly measured when there is no concept injection. The second and third are
-  hypothesized, and can be determined by fit to the observed data. We can measure
-  how well this theory predicts the observed variance by calculating the concept
-  set-points and <i>k</i> values from the observed data.</p>
+  hypothesized, and can be determined by fit to the observed data.</p>
 </div>
 
 <div class="wide" style="max-width:1120px">
@@ -1401,14 +1399,14 @@ footer { padding: 80px 0 60px; }
 <div class="wrap">
   <p>Consider a single model. We have 450 logit preference values per injection
   strength, and we have 4 injection strengths at alpha 1, 2, 4, and 8. So we have 1800
-  output/dependent observations total. Ideally, we&rsquo;d like to predict those values
+  observations total. Ideally, we&rsquo;d like to predict those values
   in terms of hypothesized independent values for the 50 concept set-points and 4
   <i>k</i> values. We test this using leave-one-out
   cross-validation (LOO-CV), i.e., by calculating the best values for the concept set-points
   and <i>k</i> values while leaving out a question, and then seeing how well those
   values predict the held-out question&rsquo;s variance. We can do this with each
-  question in turn, and then pool the held-out predictions into a single R squared
-  value for each injection strength.</p>
+  question in turn, and then pool the held-out
+  predictions into a single R&#178; value for each injection strength.</p>
 </div>
 <div class="wrap">
   <p class="rowlab" style="margin:40px 0 6px; text-align:center; font-size:20px">Leave-one-question-out R&#178; (LOO-CV)</p>
@@ -1425,10 +1423,10 @@ footer { padding: 80px 0 60px; }
 <div class="wrap">
   <p>The high R&#178; values at alpha 1 and 2 are not surprising since the logit
   preference values do not depart much from the question baseline. The high R&#178;
-  values for alpha 4 and 8, however, do suggest that our alternative hypothesis is
-  (largely) explanatory. At alpha 4, the concept set-points begin to pull the logit
+  values at alpha 4 and 8, however, do suggest that our theory is (largely)
+  explanatory. At alpha 4, the concept set-points begin to pull the logit
   preference values away from the question baseline, and at alpha 8, the
-  concept-specific set-points become highly predictive. The upshot is that at every
+  concept set-points become highly predictive. The upshot is that at every
   injection strength, non-introspective forces can explain the majority of
   variance.</p>
 </div>
@@ -1436,8 +1434,8 @@ footer { padding: 80px 0 60px; }
 <div class="wrap">
   <p>This theory also explains why we don&rsquo;t see many double flips. If logit
   preferences are getting pulled from their question&rsquo;s baseline to the concept
-  set-point, then they aren&rsquo;t likely to cross each other, let alone cross and
-  diverge from each other. Lastly, it explains why the double flips we do
+  set-point, then they aren&rsquo;t
+  likely to cross each other, let alone cross and diverge. Lastly, it explains why the double flips we do
   see occur near the zero line. If a concept set-point is far away from zero, either very
   positive or very negative, then, even in the rare
   case when the two dots cross the concept set-point, the crossing won&rsquo;t result
@@ -1473,7 +1471,7 @@ footer { padding: 80px 0 60px; }
   about the detection of injected thoughts. We&rsquo;ve also developed our own
   non-introspective explanation of the observed data. This weakens the case that
   LLMs have direct introspective access to their internal states, which in turn
-  undermines the evidence for the claim that they have phenomenal consciousness.</p>
+  undermines the evidence that they&rsquo;re phenomenally conscious.</p>
 </div>
 
 
