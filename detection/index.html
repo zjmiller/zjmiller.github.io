@@ -1301,9 +1301,7 @@ footer { padding: 80px 0 60px; }
   &ldquo;detecting a thought&rdquo;.) What we actually observe is the opposite. A
   strong reaction to one of the two questions is essentially never associated with a
   double flip. (The single exception, out of 16,000 observed responses, is the
-  injection of the Oceans concept at strength alpha 4 into Qwen 3.6 MoE 35B, which, it
-  is important to note, is significantly fewer than we would expect on even a null
-  hypothesis, according to which the flips were randomly distributed.)</p>
+  injection of the Oceans concept at strength alpha 4 into Qwen 3.6 MoE 35B.)</p>
 </div>
 
 
@@ -1321,8 +1319,9 @@ footer { padding: 80px 0 60px; }
   state&rdquo; questions. First, we do not include an initial message about
   &ldquo;interpretability researchers,&rdquo; and second, we ask each question only
   once (not ten &ldquo;trial&rdquo; times). We compare the results of these seven new
-  questions to the results of the two previous introspection questions by averaging
-  over the ten trials for each concept at each strength.</p>
+  questions to the results of the two previous introspection questions, where the dots
+  for the introspection questions are obtained by averaging over the ten trials for a
+  concept at a strength.</p>
   <ul class="qinv">
     <li>Do penguins live at the North Pole?</li>
     <li>Is ice hotter than fire?</li>
@@ -1354,7 +1353,7 @@ footer { padding: 80px 0 60px; }
 <script>rdInitBattery("rdbar5", "rdbattery");</script>
 
 <div class="wrap">
-  <p>Interestingly, we see a very similar vertical compression for these seven
+  <p>Interestingly, we see a similar vertical compression for these seven
   questions as we do for the two introspection questions. When asked a question with an
   obvious No answer (Do penguins live at the North Pole?), the model&rsquo;s logit
   preference for No weakens (or flips to a preference for Yes) as concept injection
